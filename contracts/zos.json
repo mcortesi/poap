@@ -1,0 +1,8 @@
+{
+  "zosversion": "2.2",
+  "name": "poap",
+  "version": "0.1.0",
+  "contracts": {
+    "Poap": "Poap"
+  }
+}

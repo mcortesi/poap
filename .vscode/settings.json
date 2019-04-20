@@ -1,0 +1,5 @@
+{
+  "solidity.packageDefaultDependenciesDirectory": "contracts/node_modules",
+  "solidity.packageDefaultDependenciesContractsDirectory": "",
+  "solidity.linter": "solhint"
+}

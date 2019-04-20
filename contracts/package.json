@@ -1,0 +1,20 @@
+{
+  "name": "poap-contracts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint:sol": "solhint --max-warnings 0 \"contracts/*.sol\""
+  },
+  "author": "Mariano Cortesi <mcortesi@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "openzeppelin-eth": "^2.1.3",
+    "truffle": "^5.0.4",
+    "zos": "^2.2.3",
+    "zos-lib": "^2.2.3"
+  },
+  "devDependencies": {
+    "solhint": "^2.0.0"
+  }
+}
