@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test": "truffle test",
     "lint:sol": "solhint --max-warnings 0 \"contracts/*.sol\""
   },
   "author": "Mariano Cortesi <mcortesi@gmail.com>",
@@ -15,6 +16,7 @@
     "zos-lib": "^2.2.3"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
     "solhint": "^2.0.0"
   }
 }
