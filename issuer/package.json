@@ -1,0 +1,30 @@
+{
+  "name": "issuer",
+  "version": "1.0.0",
+  "description": "POAP Issuer",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npm run build-ts",
+    "build-ts": "tsc",
+    "clean": "rm -rf ./dist",
+    "serve": "node dist/index.js",
+    "start": "npm run serve",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch-ts": "tsc --watch"
+  },
+  "author": "Mariano Cortesi <mcortesi@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "compression": "^1.7.4",
+    "express": "^4.16.4",
+    "helmet": "^3.16.0",
+    "tslib": "^1.9.3"
+  },
+  "devDependencies": {
+    "@types/compression": "0.0.36",
+    "@types/express": "^4.16.1",
+    "@types/helmet": "0.0.43",
+    "@types/node": "^11.13.8",
+    "typescript": "^3.4.5"
+  }
+}
