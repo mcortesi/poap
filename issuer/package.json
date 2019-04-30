@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run build-ts",
     "build-ts": "tsc",
-    "gensrc": "cp ../contracts/build/contracts/Poap.json src/contracts/ && typechain --target ethers --outDir ./src/contracts ./src/contracts/Poap.json",
+    "gensrc": "typechain --target ethers --outDir ./src/contracts './resources/*.json'",
     "clean": "rm -rf ./dist",
     "serve": "node dist/index.js",
     "start": "npm run serve",
@@ -20,7 +20,9 @@
     "compression": "^1.7.4",
     "ethers": "^4.0.27",
     "express": "^4.16.4",
+    "fast-csv": "^2.5.0",
     "helmet": "^3.16.0",
+    "node-fetch": "^2.4.1",
     "ts-node": "^8.1.0",
     "tslib": "^1.9.3",
     "typechain": "^0.3.14"
@@ -30,6 +32,7 @@
     "@types/express": "^4.16.1",
     "@types/helmet": "0.0.43",
     "@types/node": "^11.13.8",
+    "@types/node-fetch": "^2.3.3",
     "typescript": "^3.4.5"
   }
 }
