@@ -6,19 +6,24 @@
   "scripts": {
     "build": "npm run build-ts",
     "build-ts": "tsc",
+    "gensrc": "cp ../contracts/build/contracts/Poap.json src/contracts/ && typechain --target ethers --outDir ./src/contracts ./src/contracts/Poap.json",
     "clean": "rm -rf ./dist",
     "serve": "node dist/index.js",
     "start": "npm run serve",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "typechain": "typechain",
     "watch-ts": "tsc --watch"
   },
   "author": "Mariano Cortesi <mcortesi@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "compression": "^1.7.4",
+    "ethers": "^4.0.27",
     "express": "^4.16.4",
     "helmet": "^3.16.0",
-    "tslib": "^1.9.3"
+    "ts-node": "^8.1.0",
+    "tslib": "^1.9.3",
+    "typechain": "^0.3.14"
   },
   "devDependencies": {
     "@types/compression": "0.0.36",
