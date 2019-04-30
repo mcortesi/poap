@@ -30,7 +30,10 @@ contract Poap is Initializable, ERC721, ERC721Enumerable, PoapRoles, PoapPausabl
 
     // EventId for each token
     mapping(uint256 => uint256) private _tokenEvent;
-    
+
+    // Last Used id (used to generate new ids)
+    uint256 private lastId;
+
     bytes4 private constant _INTERFACE_ID_ERC721_METADATA = 0x5b5e139f;
     
     /**
@@ -71,31 +74,47 @@ contract Poap is Initializable, ERC721, ERC721Enumerable, PoapRoles, PoapPausabl
     }
 
     /**
-     * @dev Function to mint tokens
+     * @dev Function to migrate existing tokens from old contract
      * @param eventId EventId for the new token
      * @param tokenId The token id to mint.
      * @param to The address that will receive the minted tokens.
      * @return A boolean that indicates if the operation was successful.
      */
-    function mintToken(uint256 eventId, uint256 tokenId, address to) 
-        public whenNotPaused onlyEventMinter(eventId) returns (bool) 
+    function migrateToken(uint256 eventId, uint256 tokenId, address to) 
+        public whenNotPaused onlyAdmin returns (bool) 
     {
+        if (tokenId > lastId) {
+            lastId = tokenId;
+        }
         return _mintToken(eventId, tokenId, to);
     }
 
     /**
      * @dev Function to mint tokens
      * @param eventId EventId for the new token
-     * @param tokenId The token id to mint.
      * @param to The address that will receive the minted tokens.
      * @return A boolean that indicates if the operation was successful.
      */
-    function mintTokenBatch(uint256 eventId, uint256 tokenId, address[] memory to) 
+    function mintToken(uint256 eventId, address to) 
+        public whenNotPaused onlyEventMinter(eventId) returns (bool) 
+    {
+        lastId += 1;
+        return _mintToken(eventId, lastId, to);
+    }
+
+    /**
+     * @dev Function to mint tokens
+     * @param eventId EventId for the new token
+     * @param to The address that will receive the minted tokens.
+     * @return A boolean that indicates if the operation was successful.
+     */
+    function mintTokenBatch(uint256 eventId, address[] memory to) 
         public whenNotPaused onlyEventMinter(eventId) returns (bool) 
     {
         for (uint256 i = 0; i < to.length; ++i) {
-            _mintToken(eventId, tokenId + i, to[i]);
+            _mintToken(eventId, lastId + 1 + i, to[i]);
         }        
+        lastId += 1 + to.length;
         return true;
     }
 
