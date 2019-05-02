@@ -3,9 +3,15 @@ import * as csv from 'fast-csv';
 import { join } from 'path';
 import { concurrentMap } from './utils';
 import { writeFileSync, readFileSync } from 'fs';
-import { Addresss } from './types';
-// import fetch from 'node-fetch';
+import { Address } from './types';
+import { getContract, estimateMintingGas } from './poap-helper';
+import getEnv from './envs';
+import { Poap } from './contracts/Poap';
 
+/**
+ * Get Old Contract iface.
+ * We only need to query tokenURI
+ */
 function getOldContract() {
   const provider = getDefaultProvider('homestead');
   const ABI = ['function tokenURI(uint256 tokenId) view returns (string memory)'];
@@ -16,13 +22,12 @@ function getOldContract() {
 
 type TokenStruct = {
   id: string;
-  owner: Addresss;
+  owner: Address;
   eventId: string;
 };
 
 const URIPrefix = 'https://www.poap.xyz/events/jsons/'.length;
 const URISuffix = '.json'.length;
-
 const extractEventId = (tokenURI: string) => tokenURI.slice(URIPrefix, tokenURI.length - URISuffix);
 
 function writeTokensJson(filepath: string, tokens: TokenStruct[]) {
@@ -30,7 +35,6 @@ function writeTokensJson(filepath: string, tokens: TokenStruct[]) {
   writeFileSync(filepath, content);
 }
 
-// @ts-ignore
 function readTokensJson(filepath: string): TokenStruct[] {
   return JSON.parse(readFileSync(filepath).toString());
 }
@@ -67,7 +71,6 @@ function populateEventId(tokens: TokenStruct[]) {
   );
 }
 
-// @ts-ignore
 function groupByEvent(tokens: TokenStruct[]): Map<string, TokenStruct[]> {
   const eventTokens = new Map();
   for (const token of tokens) {
@@ -88,10 +91,29 @@ export async function generateTokenJson(txcsvPath: string, tokenJsonPath: string
   writeTokensJson(tokenJsonPath, tokens);
 }
 
-export async function writeContract(tokenJsonPath: string, startIdx = 0) {
-  const tokens = readTokensJson(tokenJsonPath).slice(startIdx);
+export async function writeContract(tokenJsonPath: string) {
+  const eventTokens = groupByEvent(readTokensJson(tokenJsonPath));
+  const BATCH_SIZE = 10;
+  const eventIds = Array.from(eventTokens.keys());
 
-  console.log('writing to bla bla', tokens.length);
+  const contract = getContract().connect(getEnv().poapAdmin) as Poap;
+
+  for (let i = 0; i < eventIds.length; i++) {
+    const tokens = eventTokens.get(eventIds[i]) as TokenStruct[];
+    for (let j = 0; j < tokens.length; ) {
+      console.log(`CurrentAction: eventIdx=${i}, addrIdx=${j}`);
+      const endJ = Math.min(j + BATCH_SIZE, tokens.length);
+      const addresses = tokens.slice(j, endJ).map(t => t.owner);
+
+      // console.log(`mintTokenBatch(${eventIds[i]}, ${addresses})`);
+      const tx = await contract.functions.mintTokenBatch(eventIds[i], addresses, {
+        gasLimit: estimateMintingGas(BATCH_SIZE),
+      });
+      console.log(`Waiting for tx: ${tx.hash}`);
+      await tx.wait();
+      j = endJ;
+    }
+  }
 }
 
 function printHelpAndExit() {
@@ -122,5 +144,4 @@ async function main() {
 
 main().catch(err => {
   console.error('Failed', err);
-  //   console.error(err);
 });

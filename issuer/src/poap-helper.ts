@@ -13,9 +13,23 @@ export function getABI(name: string) {
 
 const ABI = getABI('Poap');
 
-export function getContract() {
+export function getContract(): Poap {
   const env = getEnv();
   return new Contract(env.poapAddress, ABI, env.provider) as Poap;
+}
+
+/**
+ * Estimate gas cost for mintTokenBatch() call.
+ * We don't rely on estimateGas() since it fails.
+ *
+ * The estimated is based on empirical tests and it's
+ * also +50% of the actual empirical estimate
+ * @param n number of addresses
+ */
+export function estimateMintingGas(n: number) {
+  const delta = 136907;
+  const baseCost = 35708;
+  return (baseCost + n * delta) * 1.5;
 }
 
 export async function mintToken(eventId: number, toAddr: Address) {

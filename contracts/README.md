@@ -13,6 +13,10 @@ Run Ganache:
 
 Any time you shutdown ganache, you will need to do `zos push` and `zos create` to deploy the project into the blank blockchain.
 
+    npx zos session --network local --from 0x1df62f291b2e969fb0849d99d9ce41e2f137006e --expires 3600
+    zos push
+    zos create Poap --init initialize --args '"Poap","POAP","https://poap.xyz",[]'
+
 ### Truffle Commands
 
 To run a console:
