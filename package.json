@@ -1,0 +1,10 @@
+{
+  "name": "poap2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "private": true,
+  "author": "Mariano Cortesi <mcortesi@gmail.com>",
+  "license": "ISC"
+}

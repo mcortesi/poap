@@ -1,0 +1,99 @@
+/** define customized badge backgrounds */
+
+section.tokenHeader div.ethbuenosaires2018 img,
+ul.badges li.ethbuenosaires2018 img{
+  background:linear-gradient(to bottom right, #4E3DF5 , #6832A2);
+}
+
+section.tokenHeader div.ethdenver2019 img,
+ul.badges li.ethdenver2019 img{
+  background:radial-gradient(75% 75% at center bottom,#851761 0,#1f002c 100%);
+}
+
+section.tokenHeader div.dappcon2018 img,
+ul.badges li.dappcon2018 img{
+  background:linear-gradient(to bottom left, #3E877E , #135C53);
+}
+
+section.tokenHeader div.ethdenver2018 img,
+ul.badges li.ethdenver2018 img{
+  background:#4e4e61;
+}
+
+section.tokenHeader div.ethmemphis2018 img,
+ul.badges li.ethmemphis2018 img{
+  background:#024AAB;
+}
+
+section.tokenHeader div.ethatlanta2018 img,
+ul.badges li.ethatlanta2018 img{
+  background:#3F0809;
+}
+
+section.tokenHeader div.ethindia2018 img,
+ul.badges li.ethindia2018 img{
+  background:#162342;
+}
+
+section.tokenHeader div.edcon2018 img,
+ul.badges li.edcon2018 img{
+  background:#14ff65;
+}
+
+section.tokenHeader div.trufflecon2018 img,
+ul.badges li.trufflecon2018 img{
+  background:#312126;
+}
+
+section.tokenHeader div.nifty2018 img,
+ul.badges li.nifty2018 img{
+  background:#000;
+}
+
+section.tokenHeader div.ethberlin2018 img,
+ul.badges li.ethberlin2018 img{
+  background:#000;
+}
+
+section.tokenHeader div.ethsanfrancisco2018 img,
+ul.badges li.ethsanfrancisco2018 img{
+  background:#eee;
+}
+
+section.tokenHeader div.ethcc2018 img,
+ul.badges li.ethcc2018 img{
+  background:#fff;
+}
+
+section.tokenHeader div.devcon4 img,
+ul.badges li.devcon4 img{
+  background:#f7f7f7;
+}
+
+section.tokenHeader div.devcon1 img,
+ul.badges li.devcon1 img{
+  background:#fff;
+}
+
+section.tokenHeader div.devcon3 img,
+ul.badges li.devcon3 img{
+  background:#fff;
+}
+
+
+
+
+section.tokenHeader div.tokenwirtschaft img,
+ul.badges li.tokenwirtschaft img{
+  background:#fed8dd;
+}
+
+section.tokenHeader div.defisummit img,
+ul.badges li.defisummit img{
+  background:#fff;
+}
+
+section.tokenHeader div.ravecon0 img,
+ul.badges li.ravecon0 img{
+  background:#fe2400;
+}

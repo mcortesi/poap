@@ -1,5 +1,19 @@
 {
   "solidity.packageDefaultDependenciesDirectory": "contracts/node_modules",
   "solidity.packageDefaultDependenciesContractsDirectory": "",
-  "solidity.linter": "solhint"
+  "solidity.linter": "solhint",
+  "sqltools.connections": [
+    {
+      "askForPassword": false,
+      "connectionTimeout": 30,
+      "database": "poap_dev",
+      "dialect": "PostgreSQL",
+      "name": "localpoap",
+      "password": "poap",
+      "port": 5432,
+      "server": "127.0.0.1",
+      "username": "poap"
+    }
+  ],
+  "debug.node.autoAttach": "on"
 }

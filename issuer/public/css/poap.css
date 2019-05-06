@@ -1,0 +1,160 @@
+header{
+  background:#72a9df;
+  border-top:3px solid #aaccee;
+  padding:1em 0;
+  color:#fff
+}
+
+header img.logo{
+  width:5em;
+  position:absolute;
+  right:0.5em;
+  top:-0.8em;
+}
+
+div.center,
+section.center{
+  text-align:center;
+}
+
+div.hidden,
+section.hidden{
+  display:none;
+}
+
+section.intro{
+  padding-bottom:3em;
+}
+
+.divider{
+  background:#c7c7c7;
+  display:block;
+  padding:0.8em 0;
+  margin:1.5em 0;
+}
+
+.wrap{
+  max-width:600px;
+  box-sizing: border-box;
+  padding:0 1em;
+  margin:0 auto;
+  position:relative;
+}
+
+ul.badges,
+ul.share{
+  list-style: none;
+  padding:0;
+  margin:0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content:space-evenly;
+}
+
+ul.badges li{
+  padding:1em;
+}
+
+ul.share li i{
+  font-size:2em;
+  color:#72a9df;
+}
+
+ul.badges li img{
+  border-radius:50%;
+  border:1px solid #eee;
+  background:#72a9df;
+  width:6em;
+  height:6em;
+}
+
+ul.badges li .fas{
+  font-size:2.5em;
+  margin-right:0.5em;
+}
+
+footer{
+  text-align:center;
+  padding:2em 0 3em;
+  background:#aaccee;
+}
+
+button{
+  background:#72a9df;
+  color:#fff;
+  border:2px solid #aaccee;
+  font-family:inherit;
+  font-size:1.5em;
+  padding:0.5em;
+  box-sizing: border-box;
+  cursor:pointer;
+  margin:0.5em 0;
+}
+
+header a,
+ul.share a,
+button a{
+    color:inherit;
+    text-decoration: none;
+}
+
+ul.share a:hover i{
+  color:#aaccee;
+}
+
+button small{
+  display:block;
+  font-size:0.6em;
+  padding:0.2em;
+}
+
+section.tokenHeader img{
+  border-radius:50%;
+  border:1px solid #eee;
+  background:#72a9df;
+  width:12em;
+  height:12em;
+  display: block;
+  margin:2em auto;
+}
+
+.claim  .success{
+  padding-top:2em;
+}
+
+.claim  .action{
+  padding-top:1em;
+}
+
+ul.events{
+  list-style:none;
+  padding:0.5em 0 0 0;
+  margin:0;
+}
+
+ul.events li input[type="checkbox"],
+ul.events li label
+{
+  padding:0.3em 0.2em;
+  display:inline-block;
+}
+
+section.selectedEvents{
+  padding-top:3em;
+}
+
+section.selectedEvents textarea{
+  margin-top:0.8em;
+  height:10em;
+}
+
+button.startScanner{
+  position:absolute;
+  right:0.5em;
+  top:-1.8em;
+}
+
+@media screen and (min-width : 700px) {
+
+}

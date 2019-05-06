@@ -27,6 +27,6 @@ export default function getEnv(name?: string): EnvVariables {
   if (!ValidEnvs.includes(name)) {
     throw new Error(`Invalid Env: ${name}`);
   }
-  const env = require(`./${name}`);
+  const env = require(`./${name}`).default;
   return env;
 }

@@ -1,0 +1,38 @@
+{{#> layout}}
+<form method="POST" name="issueForm">
+  <section class="eventsList">
+    <div class="wrap">
+      <h3>Choose an Event</h3>
+      <select name="eventId">
+        {{#each events}}
+        <option value="{{id}}">{{name}}</option>
+        {{/each}}
+
+      </select>
+      {{!-- <ul id="events" class="events"> --}}
+      {{!-- <li>
+        <input type="radio" name="events" value="{{id}}" id="event{{id}}" />
+        <label for="event{{id}}">{{name}}</label>
+      </li> --}}
+      {{!-- </ul> --}}
+    </div>
+  </section>
+
+  <section class="selectedEvents">
+    {{!-- <video muted playsinline id="qr-video"></video> --}}
+    <div class="wrap">
+      <h3>Addresses</h3>
+      {{!-- <button class="startScanner">
+        <a id="scan" href=""><small>Start Scanner</small></a>
+      </button> --}}
+      <textarea id="addressList"></textarea>
+
+      <div class="center">
+        <button type="submit">
+          Issue Event Tokens<small>for addresses in textarea</small>
+        </button>
+      </div>
+    </div>
+  </section>
+</form>
+{{/ layout}}

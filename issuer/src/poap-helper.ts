@@ -44,6 +44,18 @@ export async function mintToken(eventId: number, toAddr: Address) {
   await tx.wait();
 }
 
+export async function mintTokens(eventId: number, toAddr: Address[]) {
+  const contract = getContract();
+
+  // Set a new Value, which returns the transaction
+  let tx = await contract.functions.mintTokenBatch(eventId, toAddr);
+
+  console.log(tx.hash);
+
+  // The operation is NOT complete yet; we must wait until it is mined
+  await tx.wait();
+}
+
 export async function getAllTokens(address: Address) {
   const contract = getContract();
   const tokensAmount = (await contract.functions.balanceOf(address)).toNumber();
