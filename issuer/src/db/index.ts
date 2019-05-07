@@ -6,11 +6,11 @@ export interface PoapEvent {
   description: string;
   city: string;
   country: string;
-  eventUrl: string;
-  imageUrl: string;
+  event_url: string;
+  image_url: string;
   year: number;
-  startDate: Date;
-  endDate: Date;
+  start_date: Date;
+  end_date: Date;
 
   metadata: Object;
   active: boolean;
@@ -24,7 +24,7 @@ const pool = new Pool({
 });
 
 export async function getEvents() {
-  const res = await pool.query('SELECT * FROM events');
+  const res = await pool.query('SELECT * FROM events ORDER BY start_date DESC');
   return res.rows;
 }
 

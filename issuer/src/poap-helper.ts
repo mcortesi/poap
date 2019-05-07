@@ -15,7 +15,7 @@ const ABI = getABI('Poap');
 
 export function getContract(): Poap {
   const env = getEnv();
-  return new Contract(env.poapAddress, ABI, env.provider) as Poap;
+  return new Contract(env.poapAddress, ABI, env.poapAdmin) as Poap;
 }
 
 /**
@@ -36,7 +36,9 @@ export async function mintToken(eventId: number, toAddr: Address) {
   const contract = getContract();
 
   // Set a new Value, which returns the transaction
-  let tx = await contract.functions.mintToken(eventId, toAddr);
+  const tx = await contract.functions.mintToken(eventId, toAddr, {
+    gasLimit: estimateMintingGas(1),
+  });
 
   console.log(tx.hash);
 
@@ -48,12 +50,15 @@ export async function mintTokens(eventId: number, toAddr: Address[]) {
   const contract = getContract();
 
   // Set a new Value, which returns the transaction
-  let tx = await contract.functions.mintTokenBatch(eventId, toAddr);
+  const tx = await contract.functions.mintTokenBatch(eventId, toAddr, {
+    gasLimit: estimateMintingGas(toAddr.length),
+  });
 
-  console.log(tx.hash);
+  console.log(`mintTokenBatch: transaction: ${tx.hash}`);
 
   // The operation is NOT complete yet; we must wait until it is mined
   await tx.wait();
+  console.log(`mintTokenBatch: Finished ${tx.hash}`);
 }
 
 export async function getAllTokens(address: Address) {
