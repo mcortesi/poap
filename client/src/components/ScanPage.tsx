@@ -3,12 +3,16 @@ import { loginMetamask } from '../poap-eth';
 import { ScanFooter, ScanHeader } from './ScanLayout';
 import { RouteComponentProps, Route } from 'react-router';
 import { useToggleState } from '../react-helpers';
-import { TokenInfo, getTokensFor } from '../api';
+import { TokenInfo, getTokensFor, getTokenInfo } from '../api';
 import classNames from 'classnames';
+import NoEventsImg from '../images/event-2019.svg';
+import HeaderShadowImg from '../images/header-shadow.svg';
+import HeaderShadowDesktopImg from '../images/header-shadow-desktop.svg';
+import { Link } from 'react-router-dom';
 
 export class ScanPage extends React.Component<RouteComponentProps> {
   showBadges = (address: string) => {
-    this.props.history.push(`${this.props.match.path}tokens/${address}`);
+    this.props.history.push(`${this.props.match.path}scan/${address}`);
   };
 
   render() {
@@ -16,17 +20,94 @@ export class ScanPage extends React.Component<RouteComponentProps> {
     return (
       <>
         <ScanHeader />
-        <main id="site-main" role="main" className="app-content">
+        <Route
+          exact
+          path={this.props.match.path}
+          render={() => <AddressForm onAccountDetails={this.showBadges} />}
+        />
+        <Route path={`${this.props.match.path}scan/:address`} component={AddressTokensPage} />
+        <Route path={`${this.props.match.path}token/:tokenId`} component={TokenPage} />
+        <ScanFooter />
+      </>
+    );
+  }
+}
+
+type TokenPageState = {
+  token: null | TokenInfo;
+};
+
+class TokenPage extends React.Component<RouteComponentProps<{ tokenId: string }>, TokenPageState> {
+  state: TokenPageState = {
+    token: null,
+  };
+
+  async componentDidMount() {
+    if (this.props.location.state) {
+      this.setState({ token: this.props.location.state });
+    } else {
+      const token = await getTokenInfo(this.props.match.params.tokenId);
+      this.setState({ token });
+    }
+  }
+
+  render() {
+    if (this.state.token == null) {
+      return (
+        <div className="content-event" data-aos="fade-up" data-aos-delay="300">
+          Loading...
+        </div>
+      );
+    }
+
+    const token = this.state.token;
+    return (
+      <>
+        <div className="header-events">
           <div className="container">
-            <Route
-              exact
-              path={this.props.match.path}
-              render={() => <AddressForm onAccountDetails={this.showBadges} />}
-            />
-            <Route path={`${this.props.match.path}tokens/:address`} component={AddressTokensPage} />
+            <h1>{token.event.name}</h1>
+            <p>
+              {token.event.city}, {token.event.country}
+              <br />
+              <b>{token.event.start_date}</b>
+            </p>
+            <div className="logo-event" data-aos="fade-up">
+              <img src={token.event.image_url} alt="Event" />
+            </div>
+          </div>
+        </div>
+        <main id="site-main" role="main" className="main-events">
+          <div className="image-main">
+            <img src={HeaderShadowImg} alt="" className="mobile" />
+            <img src={HeaderShadowDesktopImg} alt="" className="desktop" />
+          </div>
+          <div className="main-content">
+            <div className="container">
+              <div className="content-event" data-aos="fade-up" data-aos-delay="300">
+                <h2>Owner</h2>
+                <p className="wallet-number">{token.owner}</p>
+                <h2>Brog on the interwebz</h2>
+                <ul className="social-icons">
+                  <li>
+                    <a href="#">
+                      <img src="assets/images/twitter.svg" alt="Twitter" />
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <img src="assets/images/telegram.svg" alt="Twitter" />
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <img src="assets/images/twitter.svg" alt="Twitter" />
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </main>
-        <ScanFooter />
       </>
     );
   }
@@ -79,24 +160,30 @@ class AddressTokensPage extends React.Component<
       <>
         <p>These are the events you have attended in the past</p>
         {this.getTokensByYear().map(({ year, tokens }, i) => (
-          <div className="event-year">
+          <div key={year} className={classNames('event-year', tokens.length === 0 && 'empty-year')}>
             <h2>{year}</h2>
-            <div className={classNames('events-logos', i === 0 && 'this-year')}>
-              {tokens.length > 0 ? (
-                <>
-                  {tokens.map(t => (
-                    <a href="#" className="event-circle" data-aos="fade-up">
-                      <img src={t.event.image_url} alt={t.event.name} />
-                    </a>
-                  ))}
-                </>
-              ) : (
-                <>
-                  <img src="assets/images/event-2019.svg" alt="" />
-                  <p className="image-description">You’ve been a couch potato all of 2019</p>
-                </>
-              )}
-            </div>
+            {tokens.length > 0 ? (
+              <div className="events-logos">
+                {tokens.map(t => (
+                  <Link
+                    key={t.tokenId}
+                    to={{
+                      pathname: `/token/${t.tokenId}`,
+                      state: t,
+                    }}
+                    className="event-circle"
+                    data-aos="fade-up"
+                  >
+                    <img src={t.event.image_url} alt={t.event.name} />
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <>
+                <img src={NoEventsImg} alt="" />
+                <p className="image-description">You’ve been a couch potato all of {year}</p>
+              </>
+            )}
           </div>
         ))}
       </>
@@ -105,18 +192,22 @@ class AddressTokensPage extends React.Component<
 
   render() {
     return (
-      <div className="content-event years" data-aos="fade-up" data-aos-delay="300">
-        <h1>
-          Hey <span>{this.props.match.params.address}!</span>
-        </h1>
-        {this.state.tokens == null ? (
-          <div>Waiting for your tokens... Hang tight</div>
-        ) : this.state.tokens.length === 0 ? (
-          <div>Mmmm... You don't have any tokens...</div>
-        ) : (
-          this.renderTokens()
-        )}
-      </div>
+      <main id="site-main" role="main" className="app-content">
+        <div className="container">
+          <div className="content-event years" data-aos="fade-up" data-aos-delay="300">
+            <h1>
+              Hey <span>{this.props.match.params.address}!</span>
+            </h1>
+            {this.state.tokens == null ? (
+              <div>Waiting for your tokens... Hang tight</div>
+            ) : this.state.tokens.length === 0 ? (
+              <div>Mmmm... You don't have any tokens...</div>
+            ) : (
+              this.renderTokens()
+            )}
+          </div>
+        </div>
+      </main>
     );
   }
 }
@@ -129,23 +220,27 @@ const AddressForm: React.FC<AddressFormProps> = ({ onAccountDetails }) => {
   const [enterByHand, toggleEnterByHand] = useToggleState(false);
 
   return (
-    <div className="content-event" data-aos="fade-up" data-aos-delay="300">
-      <p>
-        The <span>Proof of attendance protocol</span> (POAP) reminds you off the{' '}
-        <span>cool places</span> you’ve been to.
-      </p>
-      {enterByHand ? (
-        <AddressInput onAddress={onAccountDetails} />
-      ) : (
-        <>
-          <p>Your browser is Web3 enabled</p>
-          <LoginButton onAddress={onAccountDetails} />
+    <main id="site-main" role="main" className="app-content">
+      <div className="container">
+        <div className="content-event" data-aos="fade-up" data-aos-delay="300">
           <p>
-            or <a onClick={toggleEnterByHand}>enter on address by hand</a>
+            The <span>Proof of attendance protocol</span> (POAP) reminds you off the{' '}
+            <span>cool places</span> you’ve been to.
           </p>
-        </>
-      )}
-    </div>
+          {enterByHand ? (
+            <AddressInput onAddress={onAccountDetails} />
+          ) : (
+            <>
+              <p>Your browser is Web3 enabled</p>
+              <LoginButton onAddress={onAccountDetails} />
+              <p>
+                or <a onClick={toggleEnterByHand}>enter on address by hand</a>
+              </p>
+            </>
+          )}
+        </div>
+      </div>
+    </main>
   );
 };
 

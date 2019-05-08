@@ -1,12 +1,9 @@
 import * as bodyParser from 'body-parser';
 import compression from 'compression';
+import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
-import * as path from 'path';
 import apiRouter from './routes/api';
-import cors from 'cors';
-
-const VIEW_PATH = path.join(__dirname, '../views');
 
 const app = express();
 

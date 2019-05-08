@@ -4,7 +4,7 @@ import { join } from 'path';
 import { Poap } from './poap-eth/Poap';
 import getEnv from './envs';
 import { Address, TokenInfo } from './types';
-import { getEvents } from './db';
+import { getEvents, getEvent } from './db';
 
 const ABI_DIR = join(__dirname, '../../abi');
 
@@ -77,26 +77,25 @@ export async function getAllTokens(address: Address): Promise<TokenInfo[]> {
 
   const tokens: TokenInfo[] = [];
   for (let i = 0; i < tokensAmount; i++) {
-    let tokenId = await contract.functions.tokenOfOwnerByIndex(address, i);
-    let uri = await contract.functions.tokenURI(tokenId);
+    const tokenId = await contract.functions.tokenOfOwnerByIndex(address, i);
+    const event = await contract.functions.tokenEvent(tokenId);
 
     tokens.push({
-      event: getEvent(5),
-      tokenURI: uri,
+      event: getEvent(event.toNumber()),
       tokenId: tokenId.toString(),
+      owner: address,
     });
   }
   return tokens;
 }
 
-export async function getTokenInfo(tokenId: number) {
+export async function getTokenInfo(tokenId: string | number): Promise<TokenInfo> {
   const contract = getContract();
+  const event = await contract.functions.tokenEvent(tokenId);
   const owner = await contract.functions.ownerOf(tokenId);
-  const uri = await contract.functions.tokenURI(tokenId);
-  // const event = getEvent()
-
   return {
-    owner: owner,
-    uri: uri,
+    event: await getEvent(event.toNumber()),
+    tokenId: tokenId.toString(),
+    owner,
   };
 }

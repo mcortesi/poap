@@ -2,7 +2,7 @@ import { authClient } from './auth';
 
 export interface TokenInfo {
   tokenId: string;
-  tokenURI: string;
+  owner: string;
   event: PoapEvent;
 }
 export interface PoapEvent {
@@ -23,6 +23,17 @@ const API_BASE = 'http://localhost:8080';
 export async function getTokensFor(address: string): Promise<TokenInfo[]> {
   console.log('getting tokens for ', address);
   const res = await fetch(`${API_BASE}/api/tokens/${address}`);
+  if (res.ok) {
+    return await res.json();
+  } else {
+    console.error(res);
+    throw new Error(`Error with request statusCode: ${res.status}`);
+  }
+}
+
+export async function getTokenInfo(tokenId: string): Promise<TokenInfo> {
+  console.log('Getting TokenInfo', tokenId);
+  const res = await fetch(`${API_BASE}/api/token/${tokenId}`);
   if (res.ok) {
     return await res.json();
   } else {

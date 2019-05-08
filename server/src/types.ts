@@ -2,7 +2,7 @@ export type Address = string;
 
 export interface TokenInfo {
   tokenId: string;
-  tokenURI: string;
+  owner: Address;
   event: PoapEvent;
 }
 

@@ -7,7 +7,8 @@
     "build": "yarn build-ts",
     "build-ts": "tsc",
     "clean": "rm -rf ./dist",
-    "start": "node --inspect=5858 -r ts-node/register ./src/index.ts",
+    "start": "ts-node-dev ./src/index.ts",
+    "debug": "node --inspect=5858 -r ts-node/register ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch-ts": "tsc --watch"
   },
