@@ -12,10 +12,10 @@ const App: React.FC<AppProps> = ({ auth }) => (
   <AuthProvider value={auth}>
     <Router>
       <Switch>
-        <Route exact path="/" component={ScanPage} />
         <Route exact path="/callback" component={Callback} />
         <Route exact path="/login" component={Login} />
         <PrivateRoute path="/admin" component={BackOffice} />
+        <Route path="/" component={ScanPage} />
       </Switch>
     </Router>
   </AuthProvider>

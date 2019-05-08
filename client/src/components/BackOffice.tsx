@@ -1,18 +1,13 @@
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, Route, withRouter } from 'react-router-dom';
 import { withAuth } from '../auth';
+import { useToggleState } from '../react-helpers';
 import { IssuePage } from './IssuePage';
 import './NavigationMenu.css';
 
 export const EventsPage = () => <div> This is a EventsPage </div>;
 export const MintersPage = () => <div> This is a MintersPage </div>;
-
-function useToggleState(initial: boolean): [boolean, () => void] {
-  const [value, setValue] = useState(initial);
-
-  return [value, () => setValue(!value)];
-}
 
 const NavigationMenu = () => {
   const [responsive, toggleResponsive] = useToggleState(false);

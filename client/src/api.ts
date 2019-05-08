@@ -1,5 +1,10 @@
 import { authClient } from './auth';
 
+export interface TokenInfo {
+  tokenId: string;
+  tokenURI: string;
+  event: PoapEvent;
+}
 export interface PoapEvent {
   id: number;
   name: string;
@@ -11,12 +16,20 @@ export interface PoapEvent {
   year: number;
   start_date: Date;
   end_date: Date;
-
-  metadata: Object;
-  active: boolean;
 }
 
 const API_BASE = 'http://localhost:8080';
+
+export async function getTokensFor(address: string): Promise<TokenInfo[]> {
+  console.log('getting tokens for ', address);
+  const res = await fetch(`${API_BASE}/api/tokens/${address}`);
+  if (res.ok) {
+    return await res.json();
+  } else {
+    console.error(res);
+    throw new Error(`Error with request statusCode: ${res.status}`);
+  }
+}
 
 export async function getEvents(): Promise<PoapEvent[]> {
   const bearer = 'Bearer ' + (await authClient.getAPIToken());

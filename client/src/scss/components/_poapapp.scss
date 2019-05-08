@@ -1,0 +1,266 @@
+/* ******************************************************
+   Main Sections POAP App 
+   ****************************************************** */
+
+.poap-app {
+    background-color: $bg-color;
+
+    &.events-page {
+        .header-events{
+            padding:0;
+            @media (min-width: $bp-mw) {
+                padding: 0 0 100px;
+            }
+        }
+        main {
+            padding:0;
+        }
+        footer {
+            margin:0;
+        }
+    }
+
+    .header-events {
+        clear: both;
+        h1 {
+            margin:0 0 10px;
+        }
+        p {
+            margin-bottom: 20px;
+        }
+    }
+}
+
+.poap-app {
+
+    header {
+        height: 200px;
+        background-image:url('../images/bg-header-m.png');
+        background-repeat:no-repeat;
+        background-size:cover;
+        background-position:top center;
+
+        -webkit-overflow-scrolling: touch;
+        -webkit-transition: all .5s ease-in-out-ut;
+        transition: all .5s ease-in-out;
+        -webkit-backface-visibility: hidden;
+        z-index: 100;
+        top: -200px;
+        position: static;
+        width: 100%;
+        padding:20px 0 0;
+
+
+        @media (min-width: $bp-sw) {
+            background-image:url('../images/bg-header.png');
+            padding:0;
+        }
+
+
+        &.fixed {
+            width: 100%;
+            z-index: 100;
+
+            position: fixed;
+            top: 0;
+            -webkit-overflow-scrolling: touch;
+            -webkit-transition: all .5s ease-in-out;
+            transition: all .5s ease-in-out;
+            -webkit-backface-visibility: hidden;
+
+            background-image:url('../images/bg-header-m-fixed.png');
+
+            @media (min-width: $bp-sw) {
+                background-image:url('../images/bg-header-fixed.png');
+            }
+        }
+
+        .container {
+            max-width: 470px;
+
+            @media (min-width: $bp-mw) {
+                max-width: 690px;
+            }
+        }
+
+        .logo {
+            margin: 10px 0 0 10px;
+            float: left;
+        }
+
+        .page-title {
+            text-align: right;
+            @include x-rem(font-size, 40px);
+            font-weight: $fontWeight-bold;
+            color:$color-primary;
+            font-family: $font-family-narrow;
+            padding: 30px 30px 0 ;
+        }
+
+    }
+
+    main {
+        padding:10px 0 30px ;
+    }
+}
+
+.fix-element {
+    padding-top: 200px;
+
+   
+    -webkit-overflow-scrolling: touch;
+    -webkit-transition: top .5s ease-in-out;
+    transition: top .5s ease-in-out;
+    -webkit-backface-visibility: hidden;
+
+    &.fixed {
+        padding-top: 200px;
+        -webkit-overflow-scrolling: touch;
+        -webkit-transition: top .5s ease-in-out;
+        transition: top .5s ease-in-out;
+        -webkit-backface-visibility: hidden;
+
+
+    }
+
+}
+
+/* ******************************************************
+   App Content
+   ****************************************************** */
+
+.app-content {
+
+    .content-event {
+        max-width: 350px;
+        margin: 0 auto;
+        width: 100%;
+        text-align: center;
+        display: block;
+
+        p {
+            span {
+                font-weight: $fontWeight-bold;
+            }
+        }
+        .login-form {
+            text-align: center;
+
+            input[type="text"] {
+                text-align: center;
+            }
+        }
+
+        &.years {
+            text-align: left;
+
+            @media (min-width: $bp-mw) {
+                margin:0 auto 50px;
+                max-width: 600px;
+            }
+
+            h1 {
+                font-weight: $fontWeight-normal;
+                @include x-rem(font-size, 20px);
+                margin:0 0 12px;
+
+                span {
+                    font-weight: $fontWeight-bold;
+                }
+            }
+            
+            .event-year {
+                margin-bottom: 30px;
+
+                &:last-child {
+                    margin:0;
+                }
+                
+                h2 {
+                    color:$color-fourth;
+                    @include x-rem(font-size, 30px);
+                    font-family: $font-family-narrow;
+                    margin-bottom: 12px;
+                }
+
+
+                &.this-year {
+
+                    img {
+                        width: 100%;
+                        max-width: 320px;
+                        margin: 0 auto 20px;
+                        display: block;
+                    }
+
+                    .image-description {
+                        width: 100%;
+                        margin:0 auto;
+                        max-width: 320px;
+                        text-align: center;
+                        color:#B29FFA;
+
+                        @media (min-width: $bp-mw) {
+                            max-width: 360px;
+                           @include x-rem(font-size, 20px);
+                        }
+                    }
+                }
+
+                .events-logos {
+                    display: flex;
+                    flex-direction:row;
+                    flex-wrap:wrap;
+
+                    .event-circle {
+                        width: 95px;
+                        height: 95px;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        margin: 0 12px 12px 0;
+                        background-color:$color-primary;
+                        -webkit-box-shadow: 0px 10px 30px -5px rgba($color-primary, 0.50);
+                        -moz-box-shadow: 0px 10px 30px -5px rgba($color-primary, 0.50);
+                        box-shadow: 0px 10px 30px -5px rgba($color-primary, 0.50);
+
+                        @media (min-width: $bp-mw) {
+                           margin: 0 24px 24px 0;
+                        }
+                    }
+                }
+            }
+        }
+
+        &.contact-form {
+            text-align: left;
+
+            @media (min-width: $bp-m) {
+                margin:0 auto 50px;
+                max-width: 600px;
+            }
+
+            h1 {
+                font-weight: $fontWeight-normal;
+                @include x-rem(font-size, 20px);
+                margin:0 0 12px;
+            }
+
+            form {
+                margin:24px 0 0 ;
+
+                input[type="text"], select, input[type="submit"] {
+                    max-width: none;
+                }
+
+                .form-group {
+                    margin:0 0 24px;
+                    float: left;
+                    width: 100%;
+                }
+            }  
+        }
+    }
+
+}
+
+

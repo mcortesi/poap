@@ -3,8 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "ganache": "ganache-cli --port 9545 --deterministic --noVMErrorsOnRPCResponse",
+    "contracts:build": "./scripts/build-contracts.sh",
+    "db:reset": "./scripts/resetdb.sh dev && ./scripts/resetdb.sh test && yarn db:populate",
+    "db:populate": "psql -h localhost -U poap poap_dev < ./db/data-dump.sql",
+    "contracts:deploy:dev": "./scripts/deploy-ganache.sh",
+    "contracts:migrate:dev": "ts-node server/src/migrate.ts writecontract"
+  },
   "private": true,
   "author": "Mariano Cortesi <mcortesi@gmail.com>",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "ts-node": "^8.1.0",
+    "typechain": "^0.3.14",
+    "typescript": "^3.4.5"
+  }
 }

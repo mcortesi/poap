@@ -1,0 +1,241 @@
+/* ******************************************************
+   Main Sections Events App 
+   ****************************************************** */
+
+.eventsapp {
+    background-color:$color-secondary;
+    float: left;
+    width: 100%;
+
+    &.green {
+        background-color:$color-third;
+    }
+}
+
+/* ******************************************************
+   Header
+   ****************************************************** */
+
+.header-events {
+    text-align: center;
+    padding:70px 0 0;
+    background-color:$bg-color;
+
+    @media (min-width: $bp-mw) {
+      padding:70px 0 100px;
+    }
+
+    h1 {
+        margin-bottom: 40px;
+    }
+
+    .logo-event {
+        position: relative;
+        z-index: 1;
+        width: 200px;
+        height: 200px;
+        border-radius:50%;
+        background-color:$color-primary;
+        margin: 0 auto;
+        -webkit-box-shadow: 0px 10px 30px -5px rgba($color-primary, 0.50);
+        -moz-box-shadow: 0px 10px 30px -5px rgba($color-primary, 0.50);
+        box-shadow: 0px 10px 30px -5px rgba($color-primary, 0.50);
+    }
+
+    &.wallet {
+        h1 {
+            margin:0 0 15px 0;
+        }
+        .logo-event {
+            width: 160px;
+            height: 160px;
+        }
+    }
+}
+
+/* ******************************************************
+   Footer
+   ****************************************************** */
+
+.footer-events { 
+    float: left;
+    width: 100%;
+    margin: 50px 0 0;
+
+    &.violet-bg {
+        z-index: 1;
+        position:relative;
+        padding:50px 0 0 0;
+        &:after {
+            content: '';
+            position:absolute;
+            top:-1px;
+            right: 0;
+            left: 0;
+            bottom:0;
+            background-color:$color-secondary;
+            z-index: -1;
+        }
+    }
+
+    .image-footer {
+        float: left;
+        width: 100%;
+        overflow: hidden;
+
+        img {
+            width: 102%;
+            max-width: none;
+            margin: 0 0 0 -1%;
+
+        }
+    }
+    
+    .footer-content {
+        background-color: $color-primary;
+        padding:0 0 30px 0;  
+        float: left;
+        width: 100%;
+        margin:-2px 0 0 0;
+
+        .decoration {
+            width: 100%;
+            max-width: 330px;
+            margin:-120px auto 10px;
+            display: block;
+
+            @media (min-width: $bp-m) {
+                margin:-100px auto 10px;
+            }
+            @media (min-width: $bp-l) {
+                margin:-105px auto 10px;
+            }
+        }
+
+        p {
+            color:$color-invert;
+            text-align: center;
+            margin:0 0 5px;
+            font-weight: $fontWeight-normal;
+
+            &:last-child {
+                margin:0;
+            }
+        }
+    } 
+}
+ 
+/* ******************************************************
+   Main
+   ****************************************************** */
+
+.main-events {
+    padding:0 0 40px;
+    margin:-100px 0 0;
+
+    @media (min-width: $bp-m) {
+       margin:-115px 0 0;
+    }  
+
+    @media (min-width: $bp-mw) {
+       margin:-200px 0 0;
+       padding:0 0 40px;
+    }
+
+    .image-main {
+        float: left;
+        overflow: hidden;
+        width: 100%;
+
+        img {
+            width: 102%;
+            margin:0 0 0 -1%;
+            max-width: none;
+        }
+    }
+    
+    .main-content {
+        background: $color-secondary;
+        margin:-1px auto 0;
+        padding:100px 0 0;
+        float: left;
+        width: 100%;
+
+        @media (min-width: $bp-m) {
+           padding:50px 0 0;
+        }
+
+        @media (min-width: $bp-l) {
+           padding:0;
+        }
+
+        .content-event {
+            max-width: 330px;
+            margin: 0 auto;
+            text-align: center;
+
+            p, h1, h2, h3 {
+                color:$color-invert;
+            }
+
+            p {
+                @include x-rem(font-size, 16px);
+                margin-bottom:12px;
+            }
+
+            h2 {
+                margin-bottom:5px;
+                @include x-rem(font-size, 30px);
+            }
+
+            .wallet-number{
+                @include x-rem(font-size, 19px);
+                font-weight:$fontWeight-bold;
+                color:$color-primary;
+                margin-bottom: 20px;
+            }
+
+            h3 {
+                margin-bottom: 20px;
+                @include x-rem(font-size, 40px);
+            }
+
+            .error {
+                color:#E13C5D;
+                @include x-rem(font-size, 20px);
+                text-align: center;
+
+            }
+        }
+
+        .social-icons {
+            list-style-type:none;
+            display:flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            margin: 20px 0;
+            padding: 0;
+
+            li {
+                margin:0;
+                padding:0;
+            }
+        }
+
+    }
+
+    &.green {
+        .main-content {
+            background-color:$color-third;
+            padding:70px 0 0;
+
+            @media (min-width: $bp-mw) {
+               padding:0 0 0;
+            }
+        }    
+        
+            
+    }
+}
+
+

@@ -3,9 +3,9 @@ const path = require('path');
 
 const Contracts = ['Poap'];
 
-const buildDir = path.join(__dirname, '../contracts/build/contracts');
+const buildDir = path.join(__dirname, '../eth/build/contracts');
 
-const outputDir = path.join(__dirname, '../issuer/resources');
+const outputDir = path.join(__dirname, '../abi');
 
 if (!fs.existsSync(outputDir)) {
   console.log(`Creating output dir`);
