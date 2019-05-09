@@ -5,7 +5,7 @@ import { Callback } from './auth/Callback';
 import { Login } from './auth/Login';
 import { PrivateRoute } from './auth/PrivateRoute';
 import { BackOffice } from './components/BackOffice';
-import { ScanPage } from './components/ScanPage';
+import { ScanPage } from './ScanPage';
 
 type AppProps = { auth: AuthService };
 const App: React.FC<AppProps> = ({ auth }) => (
