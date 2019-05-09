@@ -1,9 +1,6 @@
 import { getDefaultProvider } from 'ethers';
-import { Request, Response } from 'express';
-import Router from 'express-promise-router';
+import { FastifyInstance } from 'fastify';
 import createError from 'http-errors';
-import * as yup from 'yup';
-import { requireAuth } from '../auth';
 import { getEvent, getEvents } from '../db';
 import { getAllTokens, getTokenInfo, mintTokens } from '../poap-helper';
 import { PoapEvent } from '../types';
@@ -44,75 +41,129 @@ function buildMetadataJson(tokenUrl: string, ev: PoapEvent) {
   };
 }
 
-const router = Router();
+export default async function routes(fastify: FastifyInstance) {
+  fastify.get('/metadata/:eventId/:tokenId', async (req, res) => {
+    const event = await getEvent(parseInt(req.params.eventId));
+    const tokenUrl = `http://localhost:3000/metadata/${req.params.eventId}/${req.params.tokenId}`;
+    res.send(buildMetadataJson(tokenUrl, event));
+  });
 
-router.get('/metadata/:eventId/:tokenId', async (req: Request, res: Response) => {
-  const event = await getEvent(parseInt(req.params.eventId));
-  const tokenUrl = 'http://localhost:3000/' + req.path;
-  res.send(buildMetadataJson(tokenUrl, event));
-});
+  fastify.get(
+    '/api/ens_resolve',
+    {
+      schema: {
+        querystring: {
+          name: { type: 'string' },
+        },
+      },
+    },
+    async (req, res) => {
+      const mainnetProvider = getDefaultProvider('homestead');
 
-router.get('/api/ens_resolve', async (req: Request, res: Response) => {
-  const mainnetProvider = getDefaultProvider('homestead');
+      if (req.query['name'] == null || req.query['name'] == '') {
+        throw new createError.BadRequest('"name" query parameter is required');
+      }
 
-  if (req.query['name'] == null || req.query['name'] == '') {
-    throw new createError.BadRequest('"name" query parameter is required');
-  }
+      const resolvedAddress = await mainnetProvider.resolveName(req.query['name']);
 
-  const resolvedAddress = await mainnetProvider.resolveName(req.query['name']);
+      if (resolvedAddress == null) {
+        return {
+          valid: false,
+        };
+      } else {
+        return {
+          valid: true,
+          address: resolvedAddress,
+        };
+      }
+    }
+  );
 
-  if (resolvedAddress == null) {
-    res.send({
-      valid: false,
-    });
-  } else {
-    res.send({
-      valid: true,
-      address: resolvedAddress,
-    });
-  }
-});
+  fastify.get(
+    '/api/scan/:address',
+    {
+      schema: {
+        params: {
+          address: {
+            type: 'string',
+            minLength: 42,
+            maxLength: 42,
+            pattern: '^0x[0-9a-fA-F]{40}$',
+          },
+        },
+      },
+    },
+    async (req, res) => {
+      const address = req.params.address;
+      const tokens = await getAllTokens(address);
+      return tokens;
+    }
+  );
 
-router.get('/api/scan/:address', async (req: Request, res: Response) => {
-  const address = req.params.address;
-  const tokens = await getAllTokens(address);
-  return tokens;
-});
+  fastify.get(
+    '/api/token/:tokenId',
+    {
+      schema: {
+        params: {
+          tokenId: { type: 'integer' },
+        },
+      },
+    },
+    async (req, res) => {
+      const tokenId = req.params.tokenId;
+      const tokenInfo = await getTokenInfo(tokenId);
+      return tokenInfo;
+    }
+  );
 
-router.get('/api/token/:tokenId', async (req: Request, res: Response) => {
-  const tokenId = req.params.tokenId;
-  const tokenInfo = await getTokenInfo(tokenId);
-  return tokenInfo;
-});
+  fastify.get('/api/events', async (req, res) => {
+    const events = await getEvents();
+    return events;
+  });
 
-router.get('/api/events', async (req: Request, res: Response) => {
-  const events = await getEvents();
-  return events;
-});
+  fastify.get(
+    '/api/events/:id',
+    {
+      schema: {
+        params: {
+          id: { type: 'integer', minimum: 1 },
+        },
+      },
+    },
+    async (req, res) => {
+      const event = await getEvent(parseInt(req.params.id));
+      return event;
+    }
+  );
 
-router.get('/api/events/:id', async (req: Request, res: Response) => {
-  const event = await getEvent(parseInt(req.params.id));
-  return event;
-});
-
-const MintTokenBatchBodySchema = yup.object().shape({
-  eventId: yup.number().required(),
-  addresses: yup.array(yup.string()).min(1),
-});
-
-router.post('/api/mintTokenBatch', requireAuth, async (req: Request, res: Response) => {
-  try {
-    await MintTokenBatchBodySchema.validate(req.body);
-  } catch (err) {
-    if (err instanceof yup.ValidationError) {
-      // throw new createError.BadRequest();
-      res.status(400).send({ errors: err.errors });
+  fastify.post(
+    '/api/mintTokenBatch',
+    {
+      preValidation: [fastify.authenticate],
+      schema: {
+        body: {
+          type: 'object',
+          required: ['eventId', 'addresses'],
+          properties: {
+            eventId: { type: 'integer', minimum: 1 },
+            addresses: {
+              type: 'array',
+              minItems: 1,
+              items: {
+                type: 'string',
+                minLength: 42,
+                maxLength: 42,
+                pattern: '^0x[0-9a-fA-F]{40}$',
+              },
+            },
+          },
+        },
+      },
+    },
+    async (req, res) => {
+      await mintTokens(req.body.eventId, req.body.addresses);
+      res.status(204);
       return;
     }
-  }
-
-  await mintTokens(req.body.eventId, req.body.addresses);
-  return { status: 'done' };
-});
-
-export default router;
+  );
+}

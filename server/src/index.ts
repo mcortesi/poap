@@ -1,34 +1,33 @@
-import * as bodyParser from 'body-parser';
-import compression from 'compression';
-import cors from 'cors';
-import express from 'express';
-import helmet from 'helmet';
-import apiRouter from './routes/api';
+import fastifyFactory from 'fastify';
+import fastifyHelmet from 'fastify-helmet';
+import fastifyCors from 'fastify-cors';
 
-const app = express();
+// @ts-ignore
+import fastifyCompress from 'fastify-compress';
 
-// *******************************
-// Configure Express App
-// *******************************
+import authPlugin from './auth';
+import routesApi from './routes/api';
 
-app.disable('x-powered-by');
+const fastify = fastifyFactory({
+  logger: true,
+});
 
-// *******************************
-// Configure Middlewares
-// *******************************
+fastify.register(fastifyHelmet, {
+  hidePoweredBy: true,
+});
 
-// set well-known security-related HTTP headers
-app.use(helmet());
-app.use(cors({}));
-app.use(compression());
-app.use(bodyParser.json());
+fastify.register(fastifyCors, {});
+fastify.register(fastifyCompress, {});
 
-// *******************************
-// Setup Routes
-// *******************************
+fastify.register(authPlugin);
+fastify.register(routesApi);
 
-app.use(apiRouter);
-
-const server = app.listen(8080, () => console.log('Starting ExpressJS server on Port 3000'));
-
-export default server;
+const start = async () => {
+  try {
+    await fastify.listen(8080);
+  } catch (err) {
+    fastify.log.error(err);
+    process.exit(1);
+  }
+};
+start();
