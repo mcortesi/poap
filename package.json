@@ -17,8 +17,12 @@
   "author": "Mariano Cortesi <mcortesi@gmail.com>",
   "license": "ISC",
   "devDependencies": {
+    "@types/http-errors": "^1.6.1",
     "ts-node": "^8.1.0",
     "typechain": "^0.3.14",
     "typescript": "^3.4.5"
+  },
+  "dependencies": {
+    "http-errors": "^1.7.2"
   }
 }

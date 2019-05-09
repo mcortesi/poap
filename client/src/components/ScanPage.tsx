@@ -3,15 +3,17 @@ import { loginMetamask } from '../poap-eth';
 import { ScanFooter, ScanHeader } from './ScanLayout';
 import { RouteComponentProps, Route } from 'react-router';
 import { useToggleState } from '../react-helpers';
-import { TokenInfo, getTokensFor, getTokenInfo } from '../api';
+import { TokenInfo, getTokensFor, getTokenInfo, resolveENS } from '../api';
 import classNames from 'classnames';
 import NoEventsImg from '../images/event-2019.svg';
 import HeaderShadowImg from '../images/header-shadow.svg';
 import HeaderShadowDesktopImg from '../images/header-shadow-desktop.svg';
 import { Link } from 'react-router-dom';
+import { getAddress } from 'ethers/utils';
 
 export class ScanPage extends React.Component<RouteComponentProps> {
   showBadges = (address: string) => {
+    console.log('here we are!');
     this.props.history.push(`${this.props.match.path}scan/${address}`);
   };
 
@@ -234,7 +236,16 @@ const AddressForm: React.FC<AddressFormProps> = ({ onAccountDetails }) => {
               <p>Your browser is Web3 enabled</p>
               <LoginButton onAddress={onAccountDetails} />
               <p>
-                or <a onClick={toggleEnterByHand}>enter on address by hand</a>
+                or{' '}
+                <a
+                  href="/"
+                  onClick={e => {
+                    e.preventDefault();
+                    toggleEnterByHand();
+                  }}
+                >
+                  enter on address by hand
+                </a>
               </p>
             </>
           )}
@@ -269,11 +280,34 @@ type AddressInputProps = {
 
 const AddressInput: React.FC<AddressInputProps> = ({ onAddress }) => {
   const [address, setAddress] = useState('');
-  const handleChange: React.ChangeEventHandler<HTMLInputElement> = e => setAddress(e.target.value);
-  const onSubmit: React.FormEventHandler = e => {
-    e.preventDefault();
-    onAddress(address);
+  const [ensError, setEnsError] = useState(false);
+  const [working, setWorking] = useState(false);
+
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = e => {
+    setAddress(e.target.value);
+    if (ensError) {
+      setEnsError(false);
+    }
   };
+  const onSubmit: React.FormEventHandler = async e => {
+    e.preventDefault();
+
+    if (isValidAddress(address)) {
+      onAddress(address);
+    } else {
+      setEnsError(false);
+      setWorking(true);
+      const ensResponse = await resolveENS(address);
+      setWorking(false);
+      console.log('finished', ensResponse);
+      if (ensResponse.exists) {
+        onAddress(ensResponse.address);
+      } else {
+        setEnsError(true);
+      }
+    }
+  };
+
   return (
     <form className="login-form" onSubmit={onSubmit}>
       <input
@@ -283,7 +317,23 @@ const AddressInput: React.FC<AddressInputProps> = ({ onAddress }) => {
         placeholder="evanvanness.eth"
         onChange={handleChange}
       />
-      <input type="submit" id="submit" value="Display Badges" name="submit" />
+      {ensError && <span>Invalid ENS name</span>}
+      <input
+        type="submit"
+        id="submit"
+        value={working ? 'Working...' : 'Display Badges'}
+        name="submit"
+      />
     </form>
   );
 };
+
+function isValidAddress(str: string) {
+  try {
+    getAddress(str);
+    return true;
+  } catch (e) {
+    // invalid Address. Try ENS
+    return false;
+  }
+}
