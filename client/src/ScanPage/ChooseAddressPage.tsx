@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { loginMetamask } from '../poap-eth';
 import { useToggleState } from '../react-helpers';
 import { resolveENS } from '../api';
@@ -44,16 +44,16 @@ export const ChooseAddressPage: React.FC<ChooseAddressPageProps> = ({ onAccountD
 };
 
 type LoginButtonProps = {
-  onAddress: (account: string, provider: any) => void;
+  onAddress: (account: string) => void;
 };
 
-const LoginButton: React.FC<LoginButtonProps> = ({ onAddress: onLogin }) => {
-  const doLogin = async () => {
+const LoginButton: React.FC<LoginButtonProps> = ({ onAddress }) => {
+  const doLogin = useCallback(async () => {
     const loginData = await loginMetamask();
-    onLogin(loginData.account, loginData.provider);
-  };
+    onAddress(loginData.account);
+  }, [onAddress]);
   return (
-    <button type="button" onClick={() => 'hola'}>
+    <button type="button" onClick={doLogin}>
       <span>Login</span>
       <br />
       <span className="small-text">with Metamask</span>
