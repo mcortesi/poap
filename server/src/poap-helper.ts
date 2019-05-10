@@ -108,7 +108,7 @@ export async function verifyClaim(claim: Claim): Promise<boolean> {
 
   Logger.info({ claim }, 'Claim for event: %d from: %s', claim.eventId, claim.claimer);
 
-  const claimerMessage = JSON.stringify([claim.eventId, claim.claimer, claim.proof]);
+  const claimerMessage = JSON.stringify([claim.claimId, claim.eventId, claim.claimer, claim.proof]);
 
   Logger.info({ claimerMessage }, 'claimerMessage');
 
@@ -119,7 +119,7 @@ export async function verifyClaim(claim: Claim): Promise<boolean> {
     return false;
   }
 
-  const proofMessage = JSON.stringify([claim.eventId, claim.claimer]);
+  const proofMessage = JSON.stringify([claim.claimId, claim.eventId, claim.claimer]);
   Logger.info({ proofMessage }, 'proofMessage');
   const signerAddress = verifyMessage(proofMessage, claim.proof);
 

@@ -26,6 +26,7 @@ export interface Claim extends ClaimProof {
   claimerSignature: string;
 }
 export interface ClaimProof {
+  claimId: string;
   eventId: number;
   claimer: Address;
   proof: string;

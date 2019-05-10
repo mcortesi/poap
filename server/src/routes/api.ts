@@ -1,16 +1,9 @@
 import { getDefaultProvider } from 'ethers';
 import { FastifyInstance } from 'fastify';
 import createError from 'http-errors';
-import { getEvent, getEvents, getEventByFancyId } from '../db';
-import {
-  getAllTokens,
-  getTokenInfo,
-  mintTokens,
-  verifyClaim,
-  mintToken,
-  generateClaim,
-} from '../poap-helper';
-import { PoapEvent, Claim, Address } from '../types';
+import { getEvent, getEventByFancyId, getEvents } from '../db';
+import { getAllTokens, getTokenInfo, mintToken, mintTokens, verifyClaim } from '../poap-helper';
+import { Claim, PoapEvent } from '../types';
 
 function buildMetadataJson(tokenUrl: string, ev: PoapEvent) {
   return {
@@ -186,8 +179,9 @@ export default async function routes(fastify: FastifyInstance) {
       schema: {
         body: {
           type: 'object',
-          required: ['eventId', 'proof', 'claimer', 'claimerSignature'],
+          required: ['claimId', 'eventId', 'proof', 'claimer', 'claimerSignature'],
           properties: {
+            claimId: { type: 'string' },
             eventId: { type: 'integer', minimum: 1 },
             proof: 'signature#',
             claimer: 'address#',
@@ -205,39 +199,6 @@ export default async function routes(fastify: FastifyInstance) {
       } else {
         throw new createError.BadRequest('Invalid Claim');
       }
-    }
-  );
-
-  fastify.post(
-    '/api/proof',
-    {
-      schema: {
-        body: {
-          type: 'object',
-          required: ['eventId', 'claimer'],
-          properties: {
-            eventId: { type: 'integer', minimum: 1 },
-            claimer: 'address#',
-          },
-        },
-        // response: {
-        //   type: 'object',
-        //   properties: {
-        //     eventId: { type: 'integer', minimum: 1 },
-        //     claimer: 'address#',
-        //     proof: 'signature#',
-        //   },
-        // },
-      },
-    },
-    async (req, res) => {
-      const { eventId, claimer }: { eventId: number; claimer: Address } = req.body;
-      const proof = await generateClaim(eventId, claimer);
-      return {
-        claimer,
-        eventId,
-        proof,
-      };
     }
   );
 }

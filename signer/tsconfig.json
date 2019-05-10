@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "outDir": "./dist" /* Redirect output structure to the directory. */,
+    // "typeRoots": ["node_modules/@types"],
+    "declaration": true,
+    "sourceMap": true,
+
+    "importHelpers": true /* Import emit helpers from 'tslib'. */,
+    "strict": true /* Enable all strict type-checking options. */,
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": true /* Report errors on unused locals. */,
+    "noImplicitReturns": true,
+
+    "esModuleInterop": true
+  },
+  "include": ["./src/**/*"]
+}

@@ -119,7 +119,12 @@ export async function tryObtainBadge(event: PoapEvent, claimer: string): Promise
   const claimProof = await requestProof(event.signer_ip, event.id, claimer);
   const signer = await getUserWallet();
 
-  const claimerMsg = JSON.stringify([claimProof.eventId, claimProof.claimer, claimProof.proof]);
+  const claimerMsg = JSON.stringify([
+    claimProof.claimId,
+    claimProof.eventId,
+    claimProof.claimer,
+    claimProof.proof,
+  ]);
   const claimerSignature = await signer.signMessage(claimerMsg);
 
   await claimToken({
