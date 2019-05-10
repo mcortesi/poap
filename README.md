@@ -1,5 +1,18 @@
 ## Setup
 
+## On Initial Setup
+
+### Install dependencies
+
+    yarn install
+    (cd server; yarn install)
+    (cd client; yarn install)
+    (cd eth; yarn install)
+
+### Create Database & DBUser
+
+You'll need a postgresDB database. Install postgresql and then:
+
 ```bash
 sudo su - postgres             # Don't needed in Mac
 createuser -s -W -P poap       # (enter poap as password)
@@ -7,6 +20,28 @@ createdb -O poap poap_dev      # dev database
 createdb -O poap poap_test     # test database
 logout                         # Don't needed in Mac
 ```
+
+## Run the application
+
+### Create & Populate local DB
+
+on project's root:
+
+    yarn db:reset
+
+### Run Ganache
+
+    yarn ganache
+
+After each time you run ganache, you'll need to deploy contracts:
+
+    yarn contracts:deploy:dev
+    yarn contracts:migrate:dev # optional: to migrate current mainnet token holders
+
+### Start Apps in Dev Mode
+
+    yarn start:client
+    yarn start:server
 
 ## Description
 

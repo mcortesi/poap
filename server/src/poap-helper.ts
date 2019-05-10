@@ -1,11 +1,14 @@
-import { Contract } from 'ethers';
+import { Contract, Wallet } from 'ethers';
+import { verifyMessage } from 'ethers/utils';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { Poap } from './poap-eth/Poap';
+import { getEvent, getEvents } from './db';
 import getEnv from './envs';
-import { Address, TokenInfo } from './types';
-import { getEvents, getEvent } from './db';
+import { Poap } from './poap-eth/Poap';
+import { Address, Claim, TokenInfo } from './types';
+import pino from 'pino';
 
+const Logger = pino();
 const ABI_DIR = join(__dirname, '../../abi');
 
 export function getABI(name: string) {
@@ -98,4 +101,37 @@ export async function getTokenInfo(tokenId: string | number): Promise<TokenInfo>
     tokenId: tokenId.toString(),
     owner,
   };
+}
+
+export async function verifyClaim(claim: Claim): Promise<boolean> {
+  const event = await getEvent(claim.eventId);
+
+  Logger.info({ claim }, 'Claim for event: %d from: %s', claim.eventId, claim.claimer);
+
+  const claimerMessage = JSON.stringify([claim.eventId, claim.claimer, claim.proof]);
+
+  Logger.info({ claimerMessage }, 'claimerMessage');
+
+  const supposedClaimedAddress = verifyMessage(claimerMessage, claim.claimerSignature);
+
+  if (supposedClaimedAddress !== claim.claimer) {
+    console.log('invalid claimer signature');
+    return false;
+  }
+
+  const proofMessage = JSON.stringify([claim.eventId, claim.claimer]);
+  Logger.info({ proofMessage }, 'proofMessage');
+  const signerAddress = verifyMessage(proofMessage, claim.proof);
+
+  if (signerAddress !== event.signer) {
+    console.log('invalid signer signature');
+    return false;
+  }
+
+  return true;
+}
+
+export function generateClaim(eventId: number, claimer: Address): Promise<string> {
+  const w = new Wallet('0x7e4667c7d08e4f1f18d1f748a73d503500878366592eaf803c0764e2c626084b');
+  return w.signMessage(JSON.stringify([eventId, claimer]));
 }

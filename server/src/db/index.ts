@@ -18,4 +18,9 @@ export async function getEvent(id: number): Promise<PoapEvent> {
   return res.rows[0];
 }
 
+export async function getEventByFancyId(fancyid: string): Promise<PoapEvent> {
+  const res = await pool.query('SELECT * FROM events WHERE fancy_id = $1', [fancyid]);
+  return res.rows[0];
+}
+
 // export async function insertEvent

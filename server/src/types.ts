@@ -8,6 +8,9 @@ export interface TokenInfo {
 
 export interface PoapEvent {
   id: number;
+  fancy_id: string;
+  signer: Address;
+  signer_ip: string;
   name: string;
   description: string;
   city: string;
@@ -17,7 +20,13 @@ export interface PoapEvent {
   year: number;
   start_date: Date;
   end_date: Date;
+}
 
-  metadata: Object;
-  active: boolean;
+export interface Claim extends ClaimProof {
+  claimerSignature: string;
+}
+export interface ClaimProof {
+  eventId: number;
+  claimer: Address;
+  proof: string;
 }

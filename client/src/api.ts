@@ -1,5 +1,6 @@
 import { authClient } from './auth';
 
+export type Address = string;
 export interface TokenInfo {
   tokenId: string;
   owner: string;
@@ -7,6 +8,9 @@ export interface TokenInfo {
 }
 export interface PoapEvent {
   id: number;
+  fancy_id: string;
+  signer: Address;
+  signer_ip: string;
   name: string;
   description: string;
   city: string;
@@ -16,6 +20,15 @@ export interface PoapEvent {
   year: number;
   start_date: Date;
   end_date: Date;
+}
+
+export interface Claim extends ClaimProof {
+  claimerSignature: string;
+}
+export interface ClaimProof {
+  eventId: number;
+  claimer: Address;
+  proof: string;
 }
 
 export type ENSQueryResult = { exists: false } | { exists: true; address: string };
@@ -45,10 +58,36 @@ export function getTokenInfo(tokenId: string): Promise<TokenInfo> {
 }
 
 export async function getEvents(): Promise<PoapEvent[]> {
-  const bearer = 'Bearer ' + (await authClient.getAPIToken());
-  return fetchJson(`${API_BASE}/api/events`, {
+  return fetchJson(`${API_BASE}/api/events`);
+}
+
+export async function getEvent(fancyId: string): Promise<null | PoapEvent> {
+  return fetchJson(`${API_BASE}/api/events/${fancyId}`);
+}
+
+export async function claimToken(claim: Claim): Promise<void> {
+  const res = await fetch(`${API_BASE}/api/claim`, {
+    method: 'POST',
+    body: JSON.stringify(claim),
     headers: {
-      Authorization: bearer,
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) {
+    console.error(res);
+    throw new Error(`Error with request statusCode: ${res.status}`);
+  }
+}
+
+export async function requestProof(
+  signerIp: string,
+  eventId: number,
+  claimer: string
+): Promise<ClaimProof> {
+  return fetchJson(`http://${signerIp}/api/proof`, {
+    method: 'POST',
+    body: JSON.stringify({ eventId, claimer }),
+    headers: {
       'Content-Type': 'application/json',
     },
   });

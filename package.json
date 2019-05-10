@@ -9,7 +9,7 @@
     "db:reset": "./scripts/resetdb.sh dev && ./scripts/resetdb.sh test && yarn db:populate",
     "db:populate": "psql -h localhost -U poap poap_dev < ./db/data-dump.sql",
     "contracts:deploy:dev": "./scripts/deploy-ganache.sh",
-    "contracts:migrate:dev": "ts-node server/src/migrate.ts writecontract",
+    "contracts:migrate:dev": "(cd server; ts-node src/migrate.ts writecontract)",
     "start:client": "(cd client; yarn start)",
     "start:server": "(cd server; yarn start)"
   },

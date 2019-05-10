@@ -1,5 +1,8 @@
 CREATE TABLE events (
   "id" SERIAL PRIMARY KEY,
+  "fancy_id" varchar(256) UNIQUE not null,
+  "signer_ip" varchar,
+  "signer" varchar,
   "name" varchar(256) not null,
   "event_url" varchar,
   "image_url" varchar,

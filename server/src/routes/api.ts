@@ -1,9 +1,16 @@
 import { getDefaultProvider } from 'ethers';
 import { FastifyInstance } from 'fastify';
 import createError from 'http-errors';
-import { getEvent, getEvents } from '../db';
-import { getAllTokens, getTokenInfo, mintTokens } from '../poap-helper';
-import { PoapEvent } from '../types';
+import { getEvent, getEvents, getEventByFancyId } from '../db';
+import {
+  getAllTokens,
+  getTokenInfo,
+  mintTokens,
+  verifyClaim,
+  mintToken,
+  generateClaim,
+} from '../poap-helper';
+import { PoapEvent, Claim, Address } from '../types';
 
 function buildMetadataJson(tokenUrl: string, ev: PoapEvent) {
   return {
@@ -42,6 +49,22 @@ function buildMetadataJson(tokenUrl: string, ev: PoapEvent) {
 }
 
 export default async function routes(fastify: FastifyInstance) {
+  fastify.addSchema({
+    $id: 'address',
+    type: 'string',
+    minLength: 42,
+    maxLength: 42,
+    pattern: '^0x[0-9a-fA-F]{40}$',
+  });
+
+  fastify.addSchema({
+    $id: 'signature',
+    type: 'string',
+    minLength: 132,
+    maxLength: 132,
+    pattern: '^0x[0-9a-fA-F]{130}$',
+  });
+
   fastify.get('/metadata/:eventId/:tokenId', async (req, res) => {
     const event = await getEvent(parseInt(req.params.eventId));
     const tokenUrl = `http://localhost:3000/metadata/${req.params.eventId}/${req.params.tokenId}`;
@@ -84,12 +107,7 @@ export default async function routes(fastify: FastifyInstance) {
     {
       schema: {
         params: {
-          address: {
-            type: 'string',
-            minLength: 42,
-            maxLength: 42,
-            pattern: '^0x[0-9a-fA-F]{40}$',
-          },
+          address: 'address#',
         },
       },
     },
@@ -122,16 +140,16 @@ export default async function routes(fastify: FastifyInstance) {
   });
 
   fastify.get(
-    '/api/events/:id',
+    '/api/events/:fancyid',
     {
       schema: {
         params: {
-          id: { type: 'integer', minimum: 1 },
+          fancyid: { type: 'string' },
         },
       },
     },
     async (req, res) => {
-      const event = await getEvent(parseInt(req.params.id));
+      const event = await getEventByFancyId(req.params.fancyid);
       return event;
     }
   );
@@ -149,12 +167,7 @@ export default async function routes(fastify: FastifyInstance) {
             addresses: {
               type: 'array',
               minItems: 1,
-              items: {
-                type: 'string',
-                minLength: 42,
-                maxLength: 42,
-                pattern: '^0x[0-9a-fA-F]{40}$',
-              },
+              items: 'address#',
             },
           },
         },
@@ -164,6 +177,67 @@ export default async function routes(fastify: FastifyInstance) {
       await mintTokens(req.body.eventId, req.body.addresses);
       res.status(204);
       return;
+    }
+  );
+
+  fastify.post(
+    '/api/claim',
+    {
+      schema: {
+        body: {
+          type: 'object',
+          required: ['eventId', 'proof', 'claimer', 'claimerSignature'],
+          properties: {
+            eventId: { type: 'integer', minimum: 1 },
+            proof: 'signature#',
+            claimer: 'address#',
+            claimerSignature: 'signature#',
+          },
+        },
+      },
+    },
+    async (req, res) => {
+      const claim: Claim = req.body;
+      const isValid = await verifyClaim(claim);
+      if (isValid) {
+        await mintToken(claim.eventId, claim.claimer);
+        res.status(204);
+      } else {
+        throw new createError.BadRequest('Invalid Claim');
+      }
+    }
+  );
+
+  fastify.post(
+    '/api/proof',
+    {
+      schema: {
+        body: {
+          type: 'object',
+          required: ['eventId', 'claimer'],
+          properties: {
+            eventId: { type: 'integer', minimum: 1 },
+            claimer: 'address#',
+          },
+        },
+        // response: {
+        //   type: 'object',
+        //   properties: {
+        //     eventId: { type: 'integer', minimum: 1 },
+        //     claimer: 'address#',
+        //     proof: 'signature#',
+        //   },
+        // },
+      },
+    },
+    async (req, res) => {
+      const { eventId, claimer }: { eventId: number; claimer: Address } = req.body;
+      const proof = await generateClaim(eventId, claimer);
+      return {
+        claimer,
+        eventId,
+        proof,
+      };
     }
   );
 }

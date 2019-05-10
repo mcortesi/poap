@@ -6,6 +6,7 @@ import { Login } from './auth/Login';
 import { PrivateRoute } from './auth/PrivateRoute';
 import { BackOffice } from './components/BackOffice';
 import { ScanPage } from './ScanPage';
+import { ClaimPage } from './ClaimPage';
 
 type AppProps = { auth: AuthService };
 const App: React.FC<AppProps> = ({ auth }) => (
@@ -15,6 +16,7 @@ const App: React.FC<AppProps> = ({ auth }) => (
         <Route exact path="/callback" component={Callback} />
         <Route exact path="/login" component={Login} />
         <PrivateRoute path="/admin" component={BackOffice} />
+        <Route path="/claim/:event" component={ClaimPage} />
         <Route path="/" component={ScanPage} />
       </Switch>
     </Router>

@@ -100,6 +100,14 @@
     "@types/node" "*"
     "@types/pg-types" "*"
 
+"@types/pino@^5.8.7":
+  version "5.8.7"
+  resolved "https://registry.yarnpkg.com/@types/pino/-/pino-5.8.7.tgz#92064264a181a7fe1aa5b8d880d2f9195751ee29"
+  integrity sha512-2YLu7AhUjH6Cuf4N9MXrrxCGfJLgcScfNDWImGZz6VGFCA5emVBIu5uHaNQ1dJKtV3ZNOqkkB8XbbZwARRSXHw==
+  dependencies:
+    "@types/node" "*"
+    "@types/sonic-boom" "*"
+
 "@types/range-parser@*":
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.3.tgz#7ee330ba7caafb98090bece86a5ee44115904c2c"
@@ -112,6 +120,13 @@
   dependencies:
     "@types/express-serve-static-core" "*"
     "@types/mime" "*"
+
+"@types/sonic-boom@*":
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/@types/sonic-boom/-/sonic-boom-0.6.2.tgz#5f6c7bf6b4a0994f9339d778da6a7adcc3d37080"
+  integrity sha512-vP9Sn1tuz/BTh8L1o776Cbzr+WH4dZGmRXOjQ5L+IVQx40hUmvOS2wfIkqUsID1vL62tThWdlXWIqijwewu3mw==
+  dependencies:
+    "@types/node" "*"
 
 "@types/strip-bom@^3.0.0":
   version "3.0.0"
@@ -1577,7 +1592,7 @@ pino-std-serializers@^2.3.0:
   resolved "https://registry.yarnpkg.com/pino-std-serializers/-/pino-std-serializers-2.4.0.tgz#c0588b5ab0905ac55bae2cb61639ed93153681fb"
   integrity sha512-ysT2ylXu1aEec9k8cm/lz7emBcfpdxFWHqvHeGXf1wvfw7TKPMGhLWwS+ciHw6u4ffnmV+pkAMF4MUIZmZZdSg==
 
-pino@^5.11.1:
+pino@^5.11.1, pino@^5.12.3:
   version "5.12.3"
   resolved "https://registry.yarnpkg.com/pino/-/pino-5.12.3.tgz#5ebc7d15b3584b91de8d3cdae01ef3a10e7fb977"
   integrity sha512-/PiX7QXOMZz7edRVGm/apt22nkdRByB6ki0ftWcDpHjjNmjnE7UubNd7NeDX7cBey27obxvBvZy3oQuJbz1+Ag==
