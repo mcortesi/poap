@@ -40,6 +40,7 @@ label {
   margin: 0 0 6px;
   color: $color-base;
   width: 100%;
+  display: inline-block;
 
   @include x-rem(font-size, 16px);
 }
@@ -56,15 +57,20 @@ input[type='tel'],
 input[type='email'],
 input[type='color'] {
   width: 100%;
-  max-width: 350px;
+  max-width: 500px;
   padding: 12px;
   box-shadow: none;
   border: 2px solid $color-invert;
   background: $color-invert;
   transition: right 0.2s ease-out;
   border-radius: 10px !important;
-  @include x-rem(font-size, 16px);
+  margin: 0 auto 16px;
+  @include x-rem(font-size, 13px);
   height: 50px;
+
+  @media (min-width: $bp-m) {
+    @include x-rem(font-size, 16px);
+  }
 
   &:last-child {
     margin: 0;
@@ -79,6 +85,18 @@ input[type='color'] {
     background: scale-color($color-invert, $lightness: -5%);
     border-color: scale-color($color-invert, $lightness: -5%);
   }
+
+  &.error {
+    border: 2px solid #e13c5d;
+  }
+}
+
+.text-error {
+  color: #e13c5d;
+  max-width: 600px;
+  margin: 0 auto 16px;
+  @include x-rem(font-size, 16px);
+  text-align: center;
 }
 
 input[type='checkbox'],
@@ -141,6 +159,12 @@ input[type='submit'] {
     text-decoration: none;
     background: #ccc4f7;
     color: #e6e7f7;
+    cursor: default;
+  }
+
+  &.loading {
+    background: url('../images/loading.svg') no-repeat center center #ccc4f7;
+    background-size: 30px;
   }
 }
 
@@ -198,7 +222,4 @@ textarea {
   &:hover {
     outline: 2px solid $color-primary;
   }
-}
-
-.error-message {
 }

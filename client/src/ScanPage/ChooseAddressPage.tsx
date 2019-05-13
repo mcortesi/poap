@@ -3,6 +3,7 @@ import { loginMetamask } from '../poap-eth';
 import { useToggleState } from '../react-helpers';
 import { resolveENS } from '../api';
 import { getAddress } from 'ethers/utils';
+import classNames from 'classnames';
 
 type ChooseAddressPageProps = {
   onAccountDetails: (account: string) => void;
@@ -84,7 +85,6 @@ const AddressInput: React.FC<AddressInputProps> = ({ onAddress }) => {
       setWorking(true);
       const ensResponse = await resolveENS(address);
       setWorking(false);
-      console.log('finished', ensResponse);
       if (ensResponse.exists) {
         onAddress(ensResponse.address);
       } else {
@@ -100,12 +100,15 @@ const AddressInput: React.FC<AddressInputProps> = ({ onAddress }) => {
         required
         placeholder="evanvanness.eth"
         onChange={handleChange}
+        className={classNames(ensError && 'error')}
       />
-      {ensError && <span>Invalid ENS name</span>}
+      {ensError && <p className="text-error">Invalid ENS name</p>}
       <input
         type="submit"
         id="submit"
-        value={working ? 'Working...' : 'Display Badges'}
+        value={working ? '' : 'Display Badges'}
+        disabled={working}
+        className={classNames(working && 'loading')}
         name="submit"
       />
     </form>

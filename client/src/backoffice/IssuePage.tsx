@@ -2,6 +2,7 @@ import { ErrorMessage, Field, Form, Formik, FormikActions } from 'formik';
 import React from 'react';
 import { number, object, string } from 'yup';
 import { getEvents, mintTokenBatch, PoapEvent } from '../api';
+import classNames from 'classnames';
 
 export interface IssuePageState {
   events: PoapEvent[];
@@ -83,7 +84,7 @@ export class IssuePage extends React.Component<{}, IssuePageState> {
                       </option>
                     ))}
                   </Field>
-                  <ErrorMessage name="eventId" component="div" className="bk-error" />
+                  <ErrorMessage name="eventId" component="p" className="bk-error" />
                 </div>
                 <div className="bk-form-row">
                   <label htmlFor="addressList">Beneficiaries Addresses</label>
@@ -98,7 +99,7 @@ export class IssuePage extends React.Component<{}, IssuePageState> {
                       />
                     )}
                   />
-                  <ErrorMessage name="addressList">{msg => <div>{msg}</div>}</ErrorMessage>
+                  <ErrorMessage name="addressList" component="p" className="bk-error" />
                 </div>
                 {isSubmitting && 'Working....'}
                 <button className="btn" type="submit" disabled={isSubmitting}>

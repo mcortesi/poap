@@ -42,6 +42,10 @@
 
   input {
     max-width: none;
+
+    &.error {
+      border: 2px solid #e13c5d;
+    }
   }
 }
 
@@ -55,6 +59,15 @@
 
 .bk-error {
   color: #e13c5d;
-  margin-top: 5px;
-  @include x-rem(font-size, 14px);
+  margin: 0 auto 16px;
+
+  // margin-top: 5px;
+  // @include x-rem(font-size, 14px);
+  // max-width: 600px;
+  @include x-rem(font-size, 16px);
+}
+
+.btn.loading {
+  background: url('../images/loading.svg') no-repeat center center #ccc4f7;
+  background-size: 30px;
 }

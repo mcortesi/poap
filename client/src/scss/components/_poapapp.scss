@@ -123,7 +123,7 @@
 
 .app-content {
   .content-event {
-    max-width: 350px;
+    max-width: 600px;
     margin: 0 auto;
     width: 100%;
     text-align: center;
@@ -157,7 +157,16 @@
 
         span {
           font-weight: $fontWeight-bold;
+          @include x-rem(font-size, 16px);
+
+          @media (min-width: $bp-m) {
+            @include x-rem(font-size, 20px);
+          }
         }
+      }
+
+      p {
+        max-width: none;
       }
 
       .event-year {
@@ -249,6 +258,16 @@
           width: 100%;
         }
       }
+    }
+  }
+
+  .loading-content {
+    width: 100%;
+    padding: 20px 0;
+    text-align: center;
+
+    img {
+      max-width: 50px;
     }
   }
 }

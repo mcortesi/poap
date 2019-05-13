@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { getEvents, PoapEvent, getEvent, updateEvent } from '../api';
 import { useAsync } from '../react-helpers';
 import { Link, Switch, Route, RouteComponentProps } from 'react-router-dom';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage, FieldProps } from 'formik';
 import { object, string } from 'yup';
+import classNames from 'classnames';
 
 export const EventsPage: React.FC = () => {
   return (
@@ -28,7 +29,7 @@ const PoapEventSchema = object().shape({
     .url(),
   signer_ip: string()
     .label('Signer Url')
-    .url()
+    // .url()
     .nullable(),
   signer: string()
     .matches(ADDRESS_REGEXP, 'Must be a valid Ethereum Address')
@@ -90,61 +91,63 @@ const EditEventForm: React.FC<
             {event.name} - {event.year}
           </h2>
 
-          <div className="bk-form-row">
-            <label>Fancy ID:</label>
-            <Field type="text" disabled name="fancy_id" />
-          </div>
-          <div className="bk-form-row">
-            <label>Description:</label>
-            <Field type="text" disabled name="description" />
+          <EventField disabled title="Fancy ID" name="fancy_id" />
+          <EventField disabled title="Description" name="description" />
+          <div className="bk-group">
+            <EventField disabled title="Start Date" name="start_date" />
+            <EventField disabled title="End Date" name="end_date" />
           </div>
           <div className="bk-group">
-            <div className="bk-form-row">
-              <label>Start Date:</label>
-              <Field type="text" disabled name="start_date" />
-            </div>
-            <div className="bk-form-row">
-              <label>End Date:</label>
-              <Field type="text" disabled name="end_date" />
-            </div>
+            <EventField disabled title="City" name="city" />
+            <EventField disabled title="Country" name="country" />
           </div>
-          <div className="bk-group">
-            <div className="bk-form-row">
-              <label>City:</label>
-              <Field type="text" disabled name="city" />
-            </div>
-            <div className="bk-form-row">
-              <label>Country:</label>
+          <EventField title="Website" name="event_url" />
+          <EventField title="Image Url" name="image_url" />
+          <EventField title="Signer Url" name="signer_ip" />
+          <EventField title="Signer Address" name="signer" />
 
-              <Field type="text" disabled name="country" />
-            </div>
-          </div>
-          <div className="bk-form-row">
-            <label>Website:</label>
-            <Field type="text" name="event_url" />
-            <ErrorMessage name="event_url" component="div" className="bk-error" />
-          </div>
-          <div className="bk-form-row">
-            <label>Image Url:</label>
-            <Field type="text" name="image_url" />
-            <ErrorMessage name="image_url" component="div" className="bk-error" />
-          </div>
-          <div className="bk-form-row">
-            <label>Signer Url:</label>
-            <Field type="text" name="signer_ip" />
-            <ErrorMessage name="signer_ip" component="div" className="bk-error" />
-          </div>
-          <div className="bk-form-row">
-            <label>Signer Address:</label>
-            <Field type="text" name="signer" />
-            <ErrorMessage name="signer" component="div" className="bk-error" />
-          </div>
-          <button className="btn" type="submit" disabled={isSubmitting || !isValid || !dirty}>
-            Save
-          </button>
+          <SubmitButton isSubmitting={isSubmitting} canSubmit={dirty && isValid} />
         </Form>
       )}
     </Formik>
+  );
+};
+
+const SubmitButton: React.FC<{ isSubmitting: boolean; canSubmit: boolean }> = ({
+  isSubmitting,
+  canSubmit,
+}) => (
+  <button
+    className={classNames('btn', isSubmitting && 'loading')}
+    type="submit"
+    disabled={isSubmitting || !canSubmit}
+  >
+    {isSubmitting ? '' : 'Save'}
+  </button>
+);
+
+type EventFieldProps = {
+  title: string;
+  name: string;
+  disabled?: boolean;
+};
+const EventField: React.FC<EventFieldProps> = ({ title, name, disabled }) => {
+  return (
+    <Field
+      name={name}
+      render={({ field, form }: FieldProps) => (
+        <div className="bk-form-row">
+          <label>{title}:</label>
+          <input
+            type="text"
+            {...field}
+            disabled={disabled}
+            className={classNames(!!form.errors[name] && 'error')}
+          />
+          <ErrorMessage name={name} component="p" className="bk-error" />
+        </div>
+      )}
+    />
   );
 };
 

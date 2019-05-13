@@ -47,19 +47,9 @@ export async function getUserWallet(): Promise<Signer> {
   return signer;
 }
 
-// const POAP_ADDRESS = '0xBe0B0f08A599F07699E98A9D001084e97b9a900A';
-
-// const PoapABI = [
-//   'function tokenURI(uint256 tokenId) view returns (string memory)',
-//   'function tokenURI(uint256 tokenId) view returns (string memory)',
-// ];
-// export function getTokens(address: string) {
-//   const provider = getDefaultProvider();
-//   const poapContract = new Contract()
-
-const { userAgent: ua } = navigator;
-const isIOS = ua.includes('iPhone'); // “iPhone OS”
-const isAndroid = ua.includes('Android');
+// const { userAgent: ua } = navigator;
+// const isIOS = ua.includes('iPhone'); // “iPhone OS”
+// const isAndroid = ua.includes('Android');
 
 export function hasWeb3(): Promise<boolean> {
   return new Promise(resolve => {
