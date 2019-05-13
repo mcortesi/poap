@@ -108,3 +108,20 @@ export async function mintTokenBatch(eventId: number, addresses: string[]): Prom
     },
   });
 }
+
+export async function updateEvent(event: PoapEvent) {
+  const bearer = 'Bearer ' + (await authClient.getAPIToken());
+  const res = await fetch(`${API_BASE}/api/events/${event.fancy_id}`, {
+    method: 'PUT',
+    body: JSON.stringify(event),
+    headers: {
+      Authorization: bearer,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!res.ok) {
+    console.log(res.status);
+    throw new Error();
+  }
+}

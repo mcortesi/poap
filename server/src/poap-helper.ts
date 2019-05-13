@@ -94,10 +94,14 @@ export async function getAllTokens(address: Address): Promise<TokenInfo[]> {
 
 export async function getTokenInfo(tokenId: string | number): Promise<TokenInfo> {
   const contract = getContract();
-  const event = await contract.functions.tokenEvent(tokenId);
+  const eventId = await contract.functions.tokenEvent(tokenId);
   const owner = await contract.functions.ownerOf(tokenId);
+  const event = await getEvent(eventId.toNumber());
+  if (!event) {
+    throw new Error('Invalid Event Id');
+  }
   return {
-    event: await getEvent(event.toNumber()),
+    event,
     tokenId: tokenId.toString(),
     owner,
   };
@@ -105,6 +109,10 @@ export async function getTokenInfo(tokenId: string | number): Promise<TokenInfo>
 
 export async function verifyClaim(claim: Claim): Promise<boolean> {
   const event = await getEvent(claim.eventId);
+
+  if (!event) {
+    throw new Error('Invalid Event Id');
+  }
 
   Logger.info({ claim }, 'Claim for event: %d from: %s', claim.eventId, claim.claimer);
 

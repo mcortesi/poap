@@ -10,37 +10,13 @@ import HeaderShadowDesktopImg from '../images/header-shadow-desktop.svg';
 import HeaderShadowGreenImg from '../images/header-shadow-green.svg';
 import HeaderShadowImg from '../images/header-shadow.svg';
 import { tryGetAccount, tryObtainBadge } from '../poap-eth';
-import { useBodyClassName } from '../react-helpers';
+import { useBodyClassName, useAsync } from '../react-helpers';
 import { Link } from 'react-router-dom';
 
 type ClaimPageState = {
   event: null | PoapEvent;
   invalidEventFlag: boolean;
 };
-
-function useAsync<A>(fn: () => Promise<A>): [A | null, boolean, boolean] {
-  const [working, setWorking] = useState(false);
-  const [hasError, setError] = useState(false);
-  const [value, setValue] = useState<A | null>(null);
-
-  useEffect(() => {
-    const aux = async () => {
-      setError(false);
-      setWorking(true);
-      try {
-        const value = await fn();
-        setValue(value);
-      } catch {
-        setError(true);
-      } finally {
-        setWorking(false);
-      }
-    };
-    aux();
-  }, [fn]);
-
-  return [value, working, hasError];
-}
 
 // interface ClaimState {}
 // function claimReducer(state: ClaimState, action: ClaimAction): ClaimState {}
@@ -102,12 +78,12 @@ export const ClaimPage: React.FC<RouteComponentProps<{ event: string }>> = ({ ma
                       <h3>You’re all set!</h3>
                       <p>Your new badge will show up shortly on</p>
                       <Link to={`/scan/${account}`}>
-                        <button type="button">POAPScan</button>
+                        <button className="btn">POAPScan</button>
                       </Link>
                       <p>Smash that refresh button</p>
                     </>
                   ) : (
-                    <button type="button" onClick={obtainBadge}>
+                    <button className="btn" onClick={obtainBadge}>
                       <span>I am right here</span>
                       <br />
                       <span className="small-text">so give me by badge</span>

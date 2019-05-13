@@ -1,7 +1,7 @@
 import { getDefaultProvider } from 'ethers';
 import { FastifyInstance } from 'fastify';
 import createError from 'http-errors';
-import { getEvent, getEventByFancyId, getEvents } from '../db';
+import { getEvent, getEventByFancyId, getEvents, updateEvent } from '../db';
 import { getAllTokens, getTokenInfo, mintToken, mintTokens, verifyClaim } from '../poap-helper';
 import { Claim, PoapEvent } from '../types';
 
@@ -60,8 +60,11 @@ export default async function routes(fastify: FastifyInstance) {
 
   fastify.get('/metadata/:eventId/:tokenId', async (req, res) => {
     const event = await getEvent(parseInt(req.params.eventId));
+    if (!event) {
+      throw new createError.NotFound('Invalid Event');
+    }
     const tokenUrl = `http://localhost:3000/metadata/${req.params.eventId}/${req.params.tokenId}`;
-    res.send(buildMetadataJson(tokenUrl, event));
+    return buildMetadataJson(tokenUrl, event);
   });
 
   fastify.get(
@@ -143,10 +146,47 @@ export default async function routes(fastify: FastifyInstance) {
     },
     async (req, res) => {
       const event = await getEventByFancyId(req.params.fancyid);
+      if (!event) {
+        return new createError.NotFound('Invalid Event');
+      }
       return event;
     }
   );
 
+  fastify.put(
+    '/api/events/:fancyid',
+    {
+      preValidation: [fastify.authenticate],
+      schema: {
+        params: {
+          fancyid: { type: 'string' },
+        },
+        body: {
+          type: 'object',
+          required: ['signer', 'signer_ip', 'event_url', 'image_url'],
+          properties: {
+            signer: { anyOf: ['address#', { type: 'null' }] },
+            signer_ip: { anyOf: [{ type: 'string' }, { type: 'null' }] },
+            event_url: { type: 'string' },
+            image_url: { type: 'string' },
+          },
+        },
+      },
+    },
+    async (req, res) => {
+      const isOk = await updateEvent(req.params.fancyid, {
+        signer: req.body.signer,
+        signer_ip: req.body.signer_ip,
+        event_url: req.body.event_url,
+        image_url: req.body.image_url,
+      });
+      if (!isOk) {
+        return new createError.NotFound('Invalid event');
+      }
+      res.status(204);
+      return;
+    }
+  );
   fastify.post(
     '/api/mintTokenBatch',
     {

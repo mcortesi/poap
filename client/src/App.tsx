@@ -4,7 +4,7 @@ import { AuthProvider, AuthService } from './auth';
 import { Callback } from './auth/Callback';
 import { Login } from './auth/Login';
 import { PrivateRoute } from './auth/PrivateRoute';
-import { BackOffice } from './components/BackOffice';
+import { BackOffice } from './backoffice/Main';
 import { ScanPage } from './ScanPage';
 import { ClaimPage } from './ClaimPage';
 

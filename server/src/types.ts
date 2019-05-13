@@ -18,8 +18,8 @@ export interface PoapEvent {
   event_url: string;
   image_url: string;
   year: number;
-  start_date: Date;
-  end_date: Date;
+  start_date: string;
+  end_date: string;
 }
 
 export interface Claim extends ClaimProof {

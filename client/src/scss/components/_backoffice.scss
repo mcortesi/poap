@@ -1,0 +1,60 @@
+.bk-btn {
+  display: block;
+  cursor: pointer;
+  margin-top: 5px;
+  padding: 3px 6px;
+  border-radius: 5px;
+  font-family: 'Archivo Narrow', sans-serif;
+  border: 0;
+  text-align: center;
+  color: #fff;
+  text-decoration: none;
+  background: #41719e;
+  transition: all 0.2s ease-out;
+}
+
+.bk-eventrow {
+  padding-bottom: 5px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid black;
+  display: flex;
+  justify-content: space-between;
+}
+
+.bk-container {
+  max-width: 37em;
+  margin: auto;
+}
+
+// .bk-field-detail {
+//   padding: 5px 10px;
+// }
+
+.bk-form-row {
+  width: 100%;
+  width: 100%;
+  margin: 18px 0px;
+
+  > label {
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  input {
+    max-width: none;
+  }
+}
+
+.bk-group {
+  display: flex;
+
+  > * {
+    margin-right: 5px;
+  }
+}
+
+.bk-error {
+  color: #e13c5d;
+  margin-top: 5px;
+  @include x-rem(font-size, 14px);
+}

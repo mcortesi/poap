@@ -74,8 +74,8 @@ export class IssuePage extends React.Component<{}, IssuePageState> {
           render={({ errors, status, touched, isSubmitting }) => {
             return (
               <Form>
-                <label htmlFor="eventId">
-                  <div>Choose Event:</div>
+                <div className="bk-form-row">
+                  <label htmlFor="eventId">Choose Event:</label>
                   <Field name="eventId" component="select">
                     {this.state.events.map(event => (
                       <option key={event.id} value={event.id}>
@@ -83,10 +83,10 @@ export class IssuePage extends React.Component<{}, IssuePageState> {
                       </option>
                     ))}
                   </Field>
-                  <ErrorMessage name="eventId" component="div" />
-                </label>
-                <label htmlFor="addressList">
-                  <div>Beneficiaries Addresses</div>
+                  <ErrorMessage name="eventId" component="div" className="bk-error" />
+                </div>
+                <div className="bk-form-row">
+                  <label htmlFor="addressList">Beneficiaries Addresses</label>
                   <Field
                     name="addressList"
                     render={({ field /* _form */ }: any) => (
@@ -99,9 +99,9 @@ export class IssuePage extends React.Component<{}, IssuePageState> {
                     )}
                   />
                   <ErrorMessage name="addressList">{msg => <div>{msg}</div>}</ErrorMessage>
-                </label>
+                </div>
                 {isSubmitting && 'Working....'}
-                <button type="submit" disabled={isSubmitting}>
+                <button className="btn" type="submit" disabled={isSubmitting}>
                   Mint
                 </button>
               </Form>

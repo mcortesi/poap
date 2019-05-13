@@ -53,7 +53,7 @@ const LoginButton: React.FC<LoginButtonProps> = ({ onAddress }) => {
     onAddress(loginData.account);
   }, [onAddress]);
   return (
-    <button type="button" onClick={doLogin}>
+    <button className="btn" onClick={doLogin}>
       <span>Login</span>
       <br />
       <span className="small-text">with Metamask</span>
