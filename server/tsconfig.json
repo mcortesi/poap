@@ -4,7 +4,7 @@
     "module": "commonjs",
     "outDir": "./dist" /* Redirect output structure to the directory. */,
     // "typeRoots": ["node_modules/@types"],
-    "declaration": true,
+    "declaration": false,
     "sourceMap": true,
 
     "importHelpers": true /* Import emit helpers from 'tslib'. */,

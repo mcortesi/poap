@@ -11,7 +11,7 @@
     "contracts:deploy:dev": "./scripts/deploy-ganache.sh",
     "contracts:migrate:dev": "(cd server; ts-node src/migrate.ts writecontract)",
     "start:client": "(cd client; yarn start)",
-    "start:server": "(cd server; yarn start)"
+    "start:server": "(cd server; yarn start:dev)"
   },
   "private": true,
   "author": "Mariano Cortesi <mcortesi@gmail.com>",

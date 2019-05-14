@@ -5,7 +5,7 @@ const Contracts = ['Poap'];
 
 const buildDir = path.join(__dirname, '../eth/build/contracts');
 
-const outputDir = path.join(__dirname, '../abi');
+const outputDir = path.join(__dirname, '../server/abi');
 
 if (!fs.existsSync(outputDir)) {
   console.log(`Creating output dir`);

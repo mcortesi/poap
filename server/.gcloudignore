@@ -1,0 +1,10 @@
+
+dumps/
+
+# Exclude compiled .js files
+*.js
+
+# Exclude dependencies
+node_modules/
+
+yarn-error.log

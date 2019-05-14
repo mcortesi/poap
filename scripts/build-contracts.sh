@@ -20,7 +20,7 @@ echo "✨✨✨  Extracting ABI...   ✨✨✨"
 echo "            "
 echo "🚩 ➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖ 🚩"
 echo "✨✨✨  Generating Contract Types...   ✨✨✨"
-(yarn typechain --target ethers --outDir ./server/src/poap-eth './abi/*.json') ||
+(yarn typechain --target ethers --outDir ./server/src/poap-eth './server/abi/*.json') ||
 { echo Error extracting ABI ; exit 1; }
 
 
@@ -29,6 +29,6 @@ echo "🚩 ➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
 echo "✨✨✨                   RESULTS                           ✨✨✨"
 echo "🚩 ➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖ 🚩"
 echo "   Smart Contract in ./eth compiled                               "
-echo "   Generated ABIs                    ->    ./abi/                 "
+echo "   Generated ABIs                    ->    ./server/abi/                 "
 echo "   Generated Typescript mappings     ->    ./server/src/poap-eth  "
 echo "🚩 ➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖ 🚩"

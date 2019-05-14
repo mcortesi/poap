@@ -3,10 +3,12 @@ import pgPromise from 'pg-promise';
 import { PoapEvent } from '../types';
 
 const db = pgPromise()({
-  host: 'localhost',
-  user: 'poap',
-  password: 'poap',
-  database: 'poap_dev',
+  host: process.env.INSTANCE_CONNECTION_NAME
+    ? `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`
+    : 'localhost',
+  user: process.env.SQL_USER || 'poap',
+  password: process.env.SQL_PASSWORD || 'poap',
+  database: process.env.SQL_DATABASE || 'poap_dev',
 });
 
 function replaceDates(event: PoapEvent): PoapEvent {

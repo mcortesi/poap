@@ -9,7 +9,7 @@ import { Address, Claim, TokenInfo } from './types';
 import pino from 'pino';
 
 const Logger = pino();
-const ABI_DIR = join(__dirname, '../../abi');
+const ABI_DIR = join(__dirname, '../abi');
 
 export function getABI(name: string) {
   return JSON.parse(readFileSync(join(ABI_DIR, `${name}.json`)).toString());
