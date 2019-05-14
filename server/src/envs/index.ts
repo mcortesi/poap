@@ -8,7 +8,6 @@ export interface EnvVariables {
   provider: Provider;
   poapAdmin: Wallet;
   poapAddress: Address;
-  testAccounts: Wallet[];
 }
 
 let currentEnv = process.env.NODE_ENV || 'development';

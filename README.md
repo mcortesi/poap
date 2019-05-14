@@ -43,6 +43,18 @@ After each time you run ganache, you'll need to deploy contracts:
     yarn start:client
     yarn start:server
 
+## Deployment
+
+### Deploy to ropsten (first time only)
+
+    npx zos session --network ropsten --from 0x79A560De1CD436d1D69896DDd8DcCb226f9Fa2fD --expires 3600
+    npx zos push
+    npx zos create Poap --init initialize --args '"POAP","The Proof of Attendance Protocol","https://ropsten.poap.xyz",[]'
+
+This was already done. The POAP Address is: `0x50C5CA3e7f5566dA3Aa64eC687D283fdBEC2A2F2`
+
+### Migrate Token Owner from Old Contract
+
 ## Description
 
 We have differentes interfaces:

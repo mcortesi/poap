@@ -32,7 +32,7 @@ const poapAdmin = new Wallet(
 
 const poapAddress = '0xBe0B0f08A599F07699E98A9D001084e97b9a900A';
 
-const testAccounts = [
+export const testAccounts = [
   new Wallet('0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d', provider),
   new Wallet('0x6cbed15c793ce57650b9877cf6fa156fbef513c4e6134f022a85b1ffdd59b2a1', provider),
   new Wallet('0x6370fd033278c143179d81c5526140625662b8daa446c22ee2d73db3707e620c', provider),
@@ -49,7 +49,6 @@ const envVariables: EnvVariables = {
   provider,
   poapAddress,
   poapAdmin,
-  testAccounts,
 };
 
 export default envVariables;

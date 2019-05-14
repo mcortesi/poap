@@ -132,7 +132,7 @@ async function main() {
   const command = process.argv[2];
   if (command == 'tokenjson') {
     await generateTokenJson(
-      join(DumpsPath, 'etherscan-export.csv'),
+      join(DumpsPath, 'etherscan-export-19-05-13.csv'),
       join(DumpsPath, 'tokens.json')
     );
   } else if (command == 'writecontract') {
