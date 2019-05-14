@@ -34,6 +34,16 @@ export class Poap extends Contract {
 
     tokenEvent(tokenId: number | string | BigNumber): Promise<BigNumber>;
 
+    tokenDetailsOfOwnerByIndex(
+      owner: string,
+      index: number | string | BigNumber
+    ): Promise<{
+      tokenId: BigNumber;
+      eventId: BigNumber;
+      0: BigNumber;
+      1: BigNumber;
+    }>;
+
     tokenURI(tokenId: number | string | BigNumber): Promise<string>;
 
     renounceEventMinter(
@@ -103,9 +113,15 @@ export class Poap extends Contract {
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
-    mintTokenBatch(
+    mintEventToManyUsers(
       eventId: number | string | BigNumber,
       to: (string)[],
+      overrides?: TransactionOverrides
+    ): Promise<ContractTransaction>;
+
+    mintUserToManyEvents(
+      eventIds: (number | string | BigNumber)[],
+      to: string,
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
@@ -114,7 +130,13 @@ export class Poap extends Contract {
       overrides?: TransactionOverrides
     ): Promise<ContractTransaction>;
 
-    initialize(overrides?: TransactionOverrides): Promise<ContractTransaction>;
+    initialize(
+      __name: string,
+      __symbol: string,
+      __baseURI: string,
+      admins: (string)[],
+      overrides?: TransactionOverrides
+    ): Promise<ContractTransaction>;
 
     totalSupply(): Promise<BigNumber>;
     paused(): Promise<boolean>;

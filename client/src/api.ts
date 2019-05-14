@@ -34,7 +34,8 @@ export interface ClaimProof {
 
 export type ENSQueryResult = { exists: false } | { exists: true; address: string };
 
-const API_BASE = 'http://localhost:8080';
+const API_BASE =
+  process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://api.poap.xyz';
 
 async function fetchJson<A>(input: RequestInfo, init?: RequestInit): Promise<A> {
   const res = await fetch(input, init);
@@ -47,27 +48,27 @@ async function fetchJson<A>(input: RequestInfo, init?: RequestInit): Promise<A> 
 }
 
 export function resolveENS(name: string): Promise<ENSQueryResult> {
-  return fetchJson(`${API_BASE}/api/ens_resolve?name=${encodeURIComponent(name)}`);
+  return fetchJson(`${API_BASE}/actions/ens_resolve?name=${encodeURIComponent(name)}`);
 }
 
 export function getTokensFor(address: string): Promise<TokenInfo[]> {
-  return fetchJson(`${API_BASE}/api/scan/${address}`);
+  return fetchJson(`${API_BASE}/actions/scan/${address}`);
 }
 
 export function getTokenInfo(tokenId: string): Promise<TokenInfo> {
-  return fetchJson(`${API_BASE}/api/token/${tokenId}`);
+  return fetchJson(`${API_BASE}/token/${tokenId}`);
 }
 
 export async function getEvents(): Promise<PoapEvent[]> {
-  return fetchJson(`${API_BASE}/api/events`);
+  return fetchJson(`${API_BASE}/events`);
 }
 
 export async function getEvent(fancyId: string): Promise<null | PoapEvent> {
-  return fetchJson(`${API_BASE}/api/events/${fancyId}`);
+  return fetchJson(`${API_BASE}/events/${fancyId}`);
 }
 
 export async function claimToken(claim: Claim): Promise<void> {
-  const res = await fetch(`${API_BASE}/api/claim`, {
+  const res = await fetch(`${API_BASE}/actions/claim`, {
     method: 'POST',
     body: JSON.stringify(claim),
     headers: {
@@ -85,7 +86,7 @@ export async function requestProof(
   eventId: number,
   claimer: string
 ): Promise<ClaimProof> {
-  return fetchJson(`http://${signerIp}/api/proof`, {
+  return fetchJson(`${signerIp}/api/proof`, {
     method: 'POST',
     body: JSON.stringify({ eventId, claimer }),
     headers: {
@@ -94,9 +95,9 @@ export async function requestProof(
   });
 }
 
-export async function mintTokenBatch(eventId: number, addresses: string[]): Promise<any> {
+export async function mintEventToManyUsers(eventId: number, addresses: string[]): Promise<any> {
   const bearer = 'Bearer ' + (await authClient.getAPIToken());
-  return fetchJson(`${API_BASE}/api/mintTokenBatch`, {
+  return fetchJson(`${API_BASE}/actions/mintEventToManyUsers`, {
     method: 'POST',
     body: JSON.stringify({
       eventId,
@@ -108,10 +109,24 @@ export async function mintTokenBatch(eventId: number, addresses: string[]): Prom
     },
   });
 }
+export async function mintUserToManyEvents(eventIds: number[], address: string): Promise<any> {
+  const bearer = 'Bearer ' + (await authClient.getAPIToken());
+  return fetchJson(`${API_BASE}/actions/mintUserToManyEvents`, {
+    method: 'POST',
+    body: JSON.stringify({
+      eventIds,
+      address,
+    }),
+    headers: {
+      Authorization: bearer,
+      'Content-Type': 'application/json',
+    },
+  });
+}
 
 export async function updateEvent(event: PoapEvent) {
   const bearer = 'Bearer ' + (await authClient.getAPIToken());
-  const res = await fetch(`${API_BASE}/api/events/${event.fancy_id}`, {
+  const res = await fetch(`${API_BASE}/actions/events/${event.fancy_id}`, {
     method: 'PUT',
     body: JSON.stringify(event),
     headers: {

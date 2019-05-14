@@ -53,8 +53,19 @@ contract Poap is Initializable, ERC721, ERC721Enumerable, PoapRoles, PoapPausabl
         return _symbol;
     }
 
-    function tokenEvent(uint256 tokenId) external view returns (uint256) {
+    function tokenEvent(uint256 tokenId) public view returns (uint256) {
         return _tokenEvent[tokenId];
+    }
+
+    /**
+     * @dev Gets the token ID at a given index of the tokens list of the requested owner
+     * @param owner address owning the tokens list to be accessed
+     * @param index uint256 representing the index to be accessed of the requested tokens list
+     * @return uint256 token ID at the given index of the tokens list owned by the requested address
+     */
+    function tokenDetailsOfOwnerByIndex(address owner, uint256 index) public view returns (uint256 tokenId, uint256 eventId) {
+        tokenId = tokenOfOwnerByIndex(owner, index);
+        eventId = tokenEvent(tokenId);
     }
 
     /**
@@ -101,13 +112,29 @@ contract Poap is Initializable, ERC721, ERC721Enumerable, PoapRoles, PoapPausabl
      * @param to The address that will receive the minted tokens.
      * @return A boolean that indicates if the operation was successful.
      */
-    function mintTokenBatch(uint256 eventId, address[] memory to) 
+    function mintEventToManyUsers(uint256 eventId, address[] memory to) 
         public whenNotPaused onlyEventMinter(eventId) returns (bool) 
     {
         for (uint256 i = 0; i < to.length; ++i) {
             _mintToken(eventId, lastId + 1 + i, to[i]);
         }        
         lastId += 1 + to.length;
+        return true;
+    }
+
+    /**
+     * @dev Function to mint tokens
+     * @param eventIds EventIds to assing to user
+     * @param to The address that will receive the minted tokens.
+     * @return A boolean that indicates if the operation was successful.
+     */
+    function mintUserToManyEvents(uint256[] memory eventIds, address to) 
+        public whenNotPaused onlyAdmin() returns (bool) 
+    {
+        for (uint256 i = 0; i < eventIds.length; ++i) {
+            _mintToken(eventIds[i], lastId + 1 + i, to);
+        }        
+        lastId += 1 + eventIds.length;
         return true;
     }
 

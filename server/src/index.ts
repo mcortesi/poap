@@ -6,7 +6,7 @@ import fastifyCors from 'fastify-cors';
 import fastifyCompress from 'fastify-compress';
 
 import authPlugin from './auth';
-import routesApi from './routes/api';
+import routes from './routes';
 
 const fastify = fastifyFactory({
   logger: true,
@@ -20,7 +20,7 @@ fastify.register(fastifyCors, {});
 fastify.register(fastifyCompress, {});
 
 fastify.register(authPlugin);
-fastify.register(routesApi);
+fastify.register(routes);
 
 const start = async () => {
   try {

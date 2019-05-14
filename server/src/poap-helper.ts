@@ -1,12 +1,12 @@
-import { Contract, Wallet } from 'ethers';
+import { Contract } from 'ethers';
 import { verifyMessage } from 'ethers/utils';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import pino from 'pino';
 import { getEvent, getEvents } from './db';
 import getEnv from './envs';
 import { Poap } from './poap-eth/Poap';
 import { Address, Claim, TokenInfo } from './types';
-import pino from 'pino';
 
 const Logger = pino();
 const ABI_DIR = join(__dirname, '../abi');
@@ -50,12 +50,27 @@ export async function mintToken(eventId: number, toAddr: Address) {
   await tx.wait();
 }
 
-export async function mintTokens(eventId: number, toAddr: Address[]) {
+export async function mintEventToManyUsers(eventId: number, toAddr: Address[]) {
   const contract = getContract();
 
   // Set a new Value, which returns the transaction
-  const tx = await contract.functions.mintTokenBatch(eventId, toAddr, {
+  const tx = await contract.functions.mintEventToManyUsers(eventId, toAddr, {
     gasLimit: estimateMintingGas(toAddr.length),
+  });
+
+  console.log(`mintTokenBatch: transaction: ${tx.hash}`);
+
+  // The operation is NOT complete yet; we must wait until it is mined
+  await tx.wait();
+  console.log(`mintTokenBatch: Finished ${tx.hash}`);
+}
+
+export async function mintUserToManyEvents(eventIds: number[], toAddr: Address) {
+  const contract = getContract();
+
+  // Set a new Value, which returns the transaction
+  const tx = await contract.functions.mintUserToManyEvents(eventIds, toAddr, {
+    gasLimit: estimateMintingGas(eventIds.length),
   });
 
   console.log(`mintTokenBatch: transaction: ${tx.hash}`);
@@ -80,11 +95,9 @@ export async function getAllTokens(address: Address): Promise<TokenInfo[]> {
 
   const tokens: TokenInfo[] = [];
   for (let i = 0; i < tokensAmount; i++) {
-    const tokenId = await contract.functions.tokenOfOwnerByIndex(address, i);
-    const event = await contract.functions.tokenEvent(tokenId);
-
+    const { tokenId, eventId } = await contract.functions.tokenDetailsOfOwnerByIndex(address, i);
     tokens.push({
-      event: getEvent(event.toNumber()),
+      event: getEvent(eventId.toNumber()),
       tokenId: tokenId.toString(),
       owner: address,
     });
@@ -137,9 +150,4 @@ export async function verifyClaim(claim: Claim): Promise<boolean> {
   }
 
   return true;
-}
-
-export function generateClaim(eventId: number, claimer: Address): Promise<string> {
-  const w = new Wallet('0x7e4667c7d08e4f1f18d1f748a73d503500878366592eaf803c0764e2c626084b');
-  return w.signMessage(JSON.stringify([eventId, claimer]));
 }

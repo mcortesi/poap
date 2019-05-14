@@ -106,7 +106,7 @@ export async function writeContract(tokenJsonPath: string) {
       const addresses = tokens.slice(j, endJ).map(t => t.owner);
 
       // console.log(`mintTokenBatch(${eventIds[i]}, ${addresses})`);
-      const tx = await contract.functions.mintTokenBatch(eventIds[i], addresses, {
+      const tx = await contract.functions.mintEventToManyUsers(eventIds[i], addresses, {
         gasLimit: estimateMintingGas(BATCH_SIZE),
       });
       console.log(`Waiting for tx: ${tx.hash}`);

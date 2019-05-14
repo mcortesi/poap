@@ -1,8 +1,7 @@
 import { ErrorMessage, Field, Form, Formik, FormikActions } from 'formik';
 import React from 'react';
 import { number, object, string } from 'yup';
-import { getEvents, mintTokenBatch, PoapEvent } from '../api';
-import classNames from 'classnames';
+import { getEvents, mintEventToManyUsers, PoapEvent } from '../api';
 
 export interface IssuePageState {
   events: PoapEvent[];
@@ -53,7 +52,7 @@ export class IssuePage extends React.Component<{}, IssuePageState> {
       .split('\n')
       .map(adr => adr.trim());
     try {
-      await mintTokenBatch(values.eventId, addresses);
+      await mintEventToManyUsers(values.eventId, addresses);
     } catch (err) {
       actions.setError('Exploto Todo!');
     } finally {

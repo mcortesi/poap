@@ -301,6 +301,32 @@
     "type": "function"
   },
   {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "name": "_data",
+        "type": "bytes"
+      }
+    ],
+    "name": "safeTransferFrom",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "constant": true,
     "inputs": [
       {
@@ -539,6 +565,33 @@
     "constant": true,
     "inputs": [
       {
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokenDetailsOfOwnerByIndex",
+    "outputs": [
+      {
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "name": "eventId",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
         "name": "tokenId",
         "type": "uint256"
       }
@@ -661,7 +714,30 @@
         "type": "address[]"
       }
     ],
-    "name": "mintTokenBatch",
+    "name": "mintEventToManyUsers",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "eventIds",
+        "type": "uint256[]"
+      },
+      {
+        "name": "to",
+        "type": "address"
+      }
+    ],
+    "name": "mintUserToManyEvents",
     "outputs": [
       {
         "name": "",
@@ -706,6 +782,29 @@
         "type": "address[]"
       }
     ],
+    "name": "initialize",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "sender",
+        "type": "address"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
     "name": "initialize",
     "outputs": [],
     "payable": false,

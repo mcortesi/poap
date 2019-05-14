@@ -1,9 +1,16 @@
 import { getDefaultProvider } from 'ethers';
 import { FastifyInstance } from 'fastify';
 import createError from 'http-errors';
-import { getEvent, getEventByFancyId, getEvents, updateEvent } from '../db';
-import { getAllTokens, getTokenInfo, mintToken, mintTokens, verifyClaim } from '../poap-helper';
-import { Claim, PoapEvent } from '../types';
+import { getEvent, getEventByFancyId, getEvents, updateEvent } from './db';
+import {
+  getAllTokens,
+  getTokenInfo,
+  mintToken,
+  mintEventToManyUsers,
+  verifyClaim,
+  mintUserToManyEvents,
+} from './poap-helper';
+import { Claim, PoapEvent } from './types';
 
 function buildMetadataJson(tokenUrl: string, ev: PoapEvent) {
   return {
@@ -63,12 +70,12 @@ export default async function routes(fastify: FastifyInstance) {
     if (!event) {
       throw new createError.NotFound('Invalid Event');
     }
-    const tokenUrl = `http://localhost:3000/metadata/${req.params.eventId}/${req.params.tokenId}`;
+    const tokenUrl = `https://api.poap.xyz/metadata/${req.params.eventId}/${req.params.tokenId}`;
     return buildMetadataJson(tokenUrl, event);
   });
 
   fastify.get(
-    '/api/ens_resolve',
+    '/actions/ens_resolve',
     {
       schema: {
         querystring: {
@@ -99,7 +106,7 @@ export default async function routes(fastify: FastifyInstance) {
   );
 
   fastify.get(
-    '/api/scan/:address',
+    '/actions/scan/:address',
     {
       schema: {
         params: {
@@ -115,7 +122,7 @@ export default async function routes(fastify: FastifyInstance) {
   );
 
   fastify.get(
-    '/api/token/:tokenId',
+    '/token/:tokenId',
     {
       schema: {
         params: {
@@ -130,13 +137,13 @@ export default async function routes(fastify: FastifyInstance) {
     }
   );
 
-  fastify.get('/api/events', async (req, res) => {
+  fastify.get('/events', async (req, res) => {
     const events = await getEvents();
     return events;
   });
 
   fastify.get(
-    '/api/events/:fancyid',
+    '/events/:fancyid',
     {
       schema: {
         params: {
@@ -154,7 +161,7 @@ export default async function routes(fastify: FastifyInstance) {
   );
 
   fastify.put(
-    '/api/events/:fancyid',
+    '/events/:fancyid',
     {
       preValidation: [fastify.authenticate],
       schema: {
@@ -188,7 +195,7 @@ export default async function routes(fastify: FastifyInstance) {
     }
   );
   fastify.post(
-    '/api/mintTokenBatch',
+    '/actions/mintEventToManyUsers',
     {
       preValidation: [fastify.authenticate],
       schema: {
@@ -207,14 +214,35 @@ export default async function routes(fastify: FastifyInstance) {
       },
     },
     async (req, res) => {
-      await mintTokens(req.body.eventId, req.body.addresses);
+      await mintEventToManyUsers(req.body.eventId, req.body.addresses);
+      res.status(204);
+      return;
+    }
+  );
+  fastify.post(
+    '/actions/mintUserToManyEvents',
+    {
+      preValidation: [fastify.authenticate],
+      schema: {
+        body: {
+          type: 'object',
+          required: ['eventIds', 'addresses'],
+          properties: {
+            eventIds: { type: 'array', minItems: 1, items: { type: 'integer', minimum: 1 } },
+            address: 'address#',
+          },
+        },
+      },
+    },
+    async (req, res) => {
+      await mintUserToManyEvents(req.body.eventIds, req.body.address);
       res.status(204);
       return;
     }
   );
 
   fastify.post(
-    '/api/claim',
+    '/actions/claim',
     {
       schema: {
         body: {
