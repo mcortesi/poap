@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, Route, RouteProps } from 'react-router-dom';
+import { Route, RouteProps } from 'react-router-dom';
 import { withAuth } from '.';
 
 export interface PrivateRouteProps extends RouteProps {
@@ -15,9 +15,9 @@ export const PrivateRoute: React.FC<PrivateRouteProps> = withAuth(
           if (auth.isAuthenticated()) {
             return <Component {...props} />;
           } else {
-            return (
-              <Redirect to={{ pathname: '/login', state: { from: props.location.pathname } }} />
-            );
+            console.log('calling login with ', props.location.pathname);
+            auth.login(props.location.pathname);
+            return null;
           }
         }}
       />

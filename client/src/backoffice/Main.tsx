@@ -65,6 +65,11 @@ export const BackOffice: React.FC = () => (
           <Route path="/admin/issue-for-user" component={IssueForUserPage} />
           <Route path="/admin/events" component={EventsPage} />
           <Route path="/admin/minters" component={MintersPage} />
+          <Route
+            exact
+            path="/admin/"
+            render={() => <div>Choose an option from the right side menu</div>}
+          />
         </div>
       </div>
     </main>

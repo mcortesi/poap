@@ -1,18 +1,64 @@
-import { History } from 'history';
-import { AuthService, withAuth } from '.';
 import React from 'react';
-import { withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
+import { AuthService, withAuth } from '.';
+import LoadingImg from '../images/loading.svg';
+import PoapLogo from '../images/POAP.svg';
 
-class Callback_ extends React.Component<{ auth: AuthService; history: History }> {
+type CallbackState = {
+  loginFailed: boolean;
+};
+class Callback_ extends React.Component<
+  RouteComponentProps & { auth: AuthService },
+  CallbackState
+> {
+  state: CallbackState = {
+    loginFailed: false,
+  };
   async componentDidMount() {
-    const path = await this.props.auth.handleCallback();
-    this.props.history.push(path);
+    try {
+      const path = await this.props.auth.handleCallback();
+      this.props.history.push(path);
+    } catch (err) {
+      console.log(`login error: err`);
+      this.setState({ loginFailed: true });
+    }
   }
 
   render() {
-    return <div>Loading user profile.</div>;
+    return (
+      <>
+        <header id="site-header" role="banner">
+          <div className="container">
+            <div className="col-xs-6 col-sm-6 col-md-6">
+              <Link to="/" className="logo">
+                <img src={PoapLogo} alt="POAP" />
+              </Link>
+            </div>
+            <div className="col-xs-6 col-sm-6 col-md-6">
+              <p className="page-title">BackOffice</p>
+            </div>
+          </div>
+        </header>
+        <div className="fix-element" />
+        <main className="app-content">
+          <div className="container">
+            {this.state.loginFailed ? (
+              <div className="bk-msg-error">Login Failed</div>
+            ) : (
+              <Loading />
+            )}
+          </div>
+        </main>
+      </>
+    );
   }
 }
 
-// @ts-ignore
-export const Callback = withRouter(withAuth(Callback_));
+export const Callback = withAuth(Callback_);
+
+const Loading = () => (
+  <div className="loading-content">
+    <img src={LoadingImg} alt="" />
+  </div>
+);

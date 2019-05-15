@@ -209,9 +209,16 @@ export class IssueForUserPage extends React.Component<{}, IssueForUserPageState>
               <Form>
                 <div className="bk-form-row">
                   <label>Choose Events:</label>
-                  {this.state.events.map(event => (
-                    <Checkbox key={event.id} name="eventIds" value={event.id} label={event.name} />
-                  ))}
+                  <div>
+                    {this.state.events.map(event => (
+                      <Checkbox
+                        key={event.id}
+                        name="eventIds"
+                        value={event.id}
+                        label={event.name}
+                      />
+                    ))}
+                  </div>
                   <ErrorMessage name="eventIds" component="p" className="bk-error" />
                 </div>
                 <div className="bk-form-row">
