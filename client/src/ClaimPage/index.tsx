@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import React, { useCallback, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Link } from 'react-router-dom';
-import { getEvent, PoapEvent } from '../api';
+import { getEvent, PoapEvent, checkSigner } from '../api';
 import { Loading } from '../components/Loading';
 import FooterPattern from '../images/footer-pattern.svg';
 import FooterShadowDesktop from '../images/footer-shadow-desktop.svg';
@@ -70,6 +70,10 @@ enum ClaimState {
 }
 
 const ClaimPageInner: React.FC<{ event: PoapEvent }> = ({ event }) => {
+  const hasSigner = event.signer != null && event.signer_ip != null;
+  const checkLocation = useCallback(() => checkSigner(event.signer_ip, event.id), [event]);
+  const [onLocation, checkingLocation] = useAsync(checkLocation);
+
   const [claimState, setClaimState] = useState(ClaimState.Iddle);
   const obtainBadge = useCallback(async (event: PoapEvent, account: string) => {
     setClaimState(ClaimState.Working);
@@ -102,7 +106,12 @@ const ClaimPageInner: React.FC<{ event: PoapEvent }> = ({ event }) => {
                     <h2>Wallet</h2>
                     <p className="wallet-number">{account}</p>
                     {claimState === ClaimState.Iddle && (
-                      <ClaimButton obtainBadge={() => obtainBadge(event, account)} />
+                      <ClaimButton
+                        hasSigner={hasSigner}
+                        onLocation={onLocation}
+                        checkingLocation={checkingLocation}
+                        obtainBadge={() => obtainBadge(event, account)}
+                      />
                     )}
                     {claimState === ClaimState.Working && <Loading />}
                     {claimState === ClaimState.Finished && (
@@ -136,13 +145,42 @@ const ResponsiveImg: React.FC<{ mobile: string; desktop: string }> = ({ mobile, 
   </>
 );
 
-const ClaimButton: React.FC<{ obtainBadge: () => void }> = ({ obtainBadge }) => (
-  <button className="btn" onClick={obtainBadge}>
-    <span>I am right here</span>
-    <br />
-    <span className="small-text">so give me by badge</span>
-  </button>
-);
+type ClaimButtonProps = {
+  obtainBadge: () => void;
+  onLocation: null | boolean;
+  checkingLocation: boolean;
+  hasSigner: boolean;
+};
+const ClaimButton: React.FC<ClaimButtonProps> = ({
+  obtainBadge,
+  onLocation,
+  checkingLocation,
+  hasSigner,
+}) => {
+  if (!hasSigner) {
+    return (
+      <button className="btn" disabled>
+        Venue is inactive
+      </button>
+    );
+  } else if (checkingLocation) {
+    return <button className="btn loading" disabled />;
+  } else if (!onLocation) {
+    return (
+      <button className="btn" disabled>
+        You're not on the venue!
+      </button>
+    );
+  }
+
+  return (
+    <button className="btn" onClick={obtainBadge}>
+      <span>I am right here</span>
+      <br />
+      <span className="small-text">so give me by badge</span>
+    </button>
+  );
+};
 
 const ClaimHeader: React.FC<{ event: PoapEvent }> = ({ event }) => (
   <header id="site-header" role="banner" className="header-events">

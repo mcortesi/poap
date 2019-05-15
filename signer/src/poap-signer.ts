@@ -57,6 +57,12 @@ fastify.register(fastifyHelmet, {
 fastify.register(fastifyCors, {});
 fastify.register(fastifyCompress, {});
 
+fastify.get('/check', async (req, res) => {
+  return {
+    eventId: program.event,
+  };
+});
+
 fastify.post(
   '/api/proof',
   {
@@ -104,7 +110,7 @@ fastify.post(
 );
 
 const start = async () => {
-  console.log(`POAP Signer Started:`);
+  console.log(`POAP Signer Started (v1.1):`);
   console.log(`EventID: ${program.event}`);
 
   try {

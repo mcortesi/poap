@@ -1,4 +1,5 @@
 import { authClient } from './auth';
+import { async } from 'q';
 
 export type Address = string;
 export interface TokenInfo {
@@ -92,6 +93,19 @@ export async function claimToken(claim: Claim): Promise<void> {
   if (!res.ok) {
     console.error(res);
     throw new Error(`Error with request statusCode: ${res.status}`);
+  }
+}
+
+export async function checkSigner(signerIp: string, eventId: number): Promise<boolean> {
+  try {
+    const res = await fetch(`${signerIp}/check`);
+    if (!res.ok) {
+      return false;
+    }
+    const body = await res.json();
+    return body.eventId === eventId;
+  } catch (err) {
+    return false;
   }
 }
 
