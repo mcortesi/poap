@@ -1,8 +1,8 @@
 import React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps } from 'react-router';
 import { Link } from 'react-router-dom';
 import { AuthService, withAuth } from '.';
-import LoadingImg from '../images/loading.svg';
+import { Loading } from '../components/Loading';
 import PoapLogo from '../images/POAP.svg';
 
 type CallbackState = {
@@ -56,9 +56,3 @@ class Callback_ extends React.Component<
 }
 
 export const Callback = withAuth(Callback_);
-
-const Loading = () => (
-  <div className="loading-content">
-    <img src={LoadingImg} alt="" />
-  </div>
-);

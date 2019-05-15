@@ -4,8 +4,10 @@ import { TokenInfo, getTokensFor } from '../api';
 import classNames from 'classnames';
 import NoEventsImg from '../images/event-2019.svg';
 import { Link } from 'react-router-dom';
+import { Loading } from '../components/Loading';
 type AddressTokensPageState = {
   tokens: null | TokenInfo[];
+  error: boolean;
 };
 
 export class AddressTokensPage extends React.Component<
@@ -16,11 +18,17 @@ export class AddressTokensPage extends React.Component<
 > {
   state: AddressTokensPageState = {
     tokens: null,
+    error: false,
   };
 
   async componentDidMount() {
-    const tokens = await getTokensFor(this.props.match.params.address);
-    this.setState({ tokens });
+    try {
+      const tokens = await getTokensFor(this.props.match.params.address);
+      this.setState({ tokens });
+    } catch (err) {
+      console.error(err);
+      this.setState({ error: true });
+    }
   }
 
   getTokensByYear(): {
@@ -95,8 +103,18 @@ export class AddressTokensPage extends React.Component<
             <h1>
               Hey <span>{this.props.match.params.address}!</span>
             </h1>
-            {this.state.tokens == null ? (
-              <div>Waiting for your tokens... Hang tight</div>
+
+            {this.state.error ? (
+              <div className="bk-msg-error">
+                There was an error.
+                <br />
+                Check the address and try again
+              </div>
+            ) : this.state.tokens == null ? (
+              <>
+                <Loading />
+                <div style={{ textAlign: 'center' }}>Waiting for your tokens... Hang tight</div>
+              </>
             ) : this.state.tokens.length === 0 ? (
               <div>Mmmm... You don't have any tokens...</div>
             ) : (
