@@ -10,10 +10,23 @@ import createError from 'http-errors';
 import uuidv1 from 'uuid/v1';
 
 const program = commander
+  .option('-g --genkeys', 'Generate Addres/Private key pair')
   .option('-p --port <number>', 'Port to listen to', v => parseInt(v), 8080)
   .option('-e --event <number>', 'EventID for signing', v => parseInt(v))
   .option('-k --sk <privatekey>', 'Private Key for signing')
   .parse(process.argv);
+
+if (program.genkeys) {
+  const w = Wallet.createRandom();
+  console.log('Generating Signer Address & Private Key');
+  console.log(`Address: ${w.address}`);
+  console.log(`Private Key: ${w.privateKey}`);
+
+  console.log('Now call poap-signer using the private key');
+  console.log(`  poap-signer --sk ${w.privateKey} ...`);
+  console.log('Remember to save the address in POAP Backofice');
+  process.exit(0);
+}
 
 if (!program.event) {
   console.error('event is Required');

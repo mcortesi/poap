@@ -6,14 +6,15 @@ import { getAddress } from 'ethers/utils';
 declare global {
   interface Window {
     ethereum?: {
-      isMetamask?: boolean;
+      isMetaMask?: boolean;
       enable(): Promise<string[]>;
+      selectedAddress?: string;
     };
   }
 }
 
 export function hasMetamask() {
-  return typeof (window as any).ethereum !== 'undefined' && window.ethereum!.isMetamask;
+  return typeof (window as any).ethereum !== 'undefined' && window.ethereum!.isMetaMask;
 }
 
 export function hasCurrentProvider() {
@@ -43,7 +44,7 @@ export async function getWeb3Provider(): Promise<Web3Provider> {
 
 export async function getUserWallet(): Promise<Signer> {
   const provider = await getWeb3Provider();
-  const signer = provider.getSigner(0);
+  const signer = provider.getSigner();
   return signer;
 }
 
@@ -78,6 +79,10 @@ export function hasWeb3(): Promise<boolean> {
         checkForWeb3();
     }
   });
+}
+
+export function isMetamaskLogged() {
+  return window.ethereum!.selectedAddress != null;
 }
 
 export async function tryGetAccount(): Promise<null | string> {

@@ -11,7 +11,7 @@ import HeaderShadowDesktopGreenImg from '../images/header-shadow-desktop-green.s
 import HeaderShadowDesktopImg from '../images/header-shadow-desktop.svg';
 import HeaderShadowGreenImg from '../images/header-shadow-green.svg';
 import HeaderShadowImg from '../images/header-shadow.svg';
-import { tryGetAccount, tryObtainBadge } from '../poap-eth';
+import { tryGetAccount, tryObtainBadge, hasMetamask, isMetamaskLogged } from '../poap-eth';
 import { useAsync, useBodyClassName } from '../react-helpers';
 
 type ClaimPageState = {
@@ -38,10 +38,13 @@ export const CheckAccount: React.FC<{
   render: (address: string) => React.ReactElement;
 }> = ({ render }) => {
   const [account, fetchingAccount, fetchAccountError] = useAsync(tryGetAccount);
+  const metamaskLoggedOut = hasMetamask() && !isMetamaskLogged();
   if (fetchingAccount) {
     return <p>Checking Browser for Web3</p>;
   } else if (fetchAccountError) {
-    return <p className="error">There was a problem obtaining your acocunt</p>;
+    return <p className="error">There was a problem obtaining your account</p>;
+  } else if (metamaskLoggedOut) {
+    return <p className="error">Metamask is Logged Out. Login and Refresh</p>;
   } else if (account == null) {
     return <p className="error">You need a Web3 enabled browser to get your badge here</p>;
   }
@@ -63,6 +66,7 @@ enum ClaimState {
   Working,
   Finished,
   Failed,
+  MetaMaskLoggedOut,
 }
 
 const ClaimPageInner: React.FC<{ event: PoapEvent }> = ({ event }) => {
@@ -73,6 +77,7 @@ const ClaimPageInner: React.FC<{ event: PoapEvent }> = ({ event }) => {
       await tryObtainBadge(event, account);
       setClaimState(ClaimState.Finished);
     } catch (err) {
+      console.log(err);
       setClaimState(ClaimState.Failed);
     }
   }, []);

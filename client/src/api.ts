@@ -135,7 +135,7 @@ export async function mintUserToManyEvents(eventIds: number[], address: string):
 }
 
 export async function updateEvent(event: PoapEvent) {
-  return secureFetchNoResponse(`${API_BASE}/actions/events/${event.fancy_id}`, {
+  return secureFetchNoResponse(`${API_BASE}/events/${event.fancy_id}`, {
     method: 'PUT',
     body: JSON.stringify(event),
     headers: {

@@ -50,20 +50,20 @@ const EditEventForm: React.FC<
 
   useEffect(() => {
     const fn = async () => {
-      if (location.state) {
-        setEvent(location.state);
-      } else {
-        const event = await getEvent(match.params.eventId);
-        if (event) {
-          if (event.signer == null) {
-            event.signer = '';
-          }
-          if (event.signer_ip == null) {
-            event.signer_ip = '';
-          }
+      // if (location.state) {
+      //   setEvent(location.state);
+      // } else {
+      const event = await getEvent(match.params.eventId);
+      if (event) {
+        if (event.signer == null) {
+          event.signer = '';
         }
-        setEvent(event);
+        if (event.signer_ip == null) {
+          event.signer_ip = '';
+        }
       }
+      setEvent(event);
+      // }
     };
     fn();
   }, [location, match]);
@@ -73,43 +73,47 @@ const EditEventForm: React.FC<
   }
 
   return (
-    <Formik
-      initialValues={event}
-      validationSchema={PoapEventSchema}
-      onSubmit={async (values, actions) => {
-        try {
-          actions.setSubmitting(true);
-          await updateEvent(values);
-        } finally {
-          actions.setSubmitting(false);
-        }
-      }}
-    >
-      {({ isSubmitting, isValid, dirty }) => (
-        <Form>
-          <h2>
-            {event.name} - {event.year}
-          </h2>
+    <>
+      <Formik
+        initialValues={event}
+        validationSchema={PoapEventSchema}
+        onSubmit={async (values, actions) => {
+          try {
+            actions.setSubmitting(true);
+            await updateEvent(values);
+          } finally {
+            actions.setSubmitting(false);
+          }
+        }}
+      >
+        {({ isSubmitting, isValid, dirty }) => (
+          <Form>
+            <h2>
+              {event.name} - {event.year}
+            </h2>
 
-          <EventField disabled title="Fancy ID" name="fancy_id" />
-          <EventField disabled title="Description" name="description" />
-          <div className="bk-group">
-            <EventField disabled title="Start Date" name="start_date" />
-            <EventField disabled title="End Date" name="end_date" />
-          </div>
-          <div className="bk-group">
-            <EventField disabled title="City" name="city" />
-            <EventField disabled title="Country" name="country" />
-          </div>
-          <EventField title="Website" name="event_url" />
-          <EventField title="Image Url" name="image_url" />
-          <EventField title="Signer Url" name="signer_ip" />
-          <EventField title="Signer Address" name="signer" />
+            <EventField disabled title="ID" name="id" />
+            <EventField disabled title="Fancy ID" name="fancy_id" />
+            <EventField disabled title="Description" name="description" />
+            <div className="bk-group">
+              <EventField disabled title="Start Date" name="start_date" />
+              <EventField disabled title="End Date" name="end_date" />
+            </div>
+            <div className="bk-group">
+              <EventField disabled title="City" name="city" />
+              <EventField disabled title="Country" name="country" />
+            </div>
+            <EventField title="Website" name="event_url" />
+            <EventField title="Image Url" name="image_url" />
+            <EventField title="Signer Url" name="signer_ip" />
+            <EventField title="Signer Address" name="signer" />
 
-          <SubmitButton text="Save" isSubmitting={isSubmitting} canSubmit={dirty && isValid} />
-        </Form>
-      )}
-    </Formik>
+            <SubmitButton text="Save" isSubmitting={isSubmitting} canSubmit={dirty && isValid} />
+          </Form>
+        )}
+      </Formik>
+      <Link to={`/claim/${event.fancy_id}`}>Go to Claim Page</Link>
+    </>
   );
 };
 
@@ -165,7 +169,13 @@ const EventList: React.FC = () => {
 const EventRow: React.FC<{ event: PoapEvent }> = ({ event }) => {
   return (
     <div className="bk-eventrow">
-      <div>{event.name}</div>
+      <div>
+        <p>
+          {event.name} - {event.year}
+        </p>
+        <p>{event.fancy_id}</p>
+        <p>{event.signer && event.signer_ip ? 'Active' : 'Inactive'}</p>
+      </div>
       <div>
         <Link to={{ pathname: `/admin/events/${event.fancy_id}`, state: event }}>
           <button className="bk-btn">Edit</button>
