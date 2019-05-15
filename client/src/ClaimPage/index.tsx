@@ -1,7 +1,9 @@
 import classNames from 'classnames';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
+import { Link } from 'react-router-dom';
 import { getEvent, PoapEvent } from '../api';
+import { Loading } from '../components/Loading';
 import FooterPattern from '../images/footer-pattern.svg';
 import FooterShadowDesktop from '../images/footer-shadow-desktop.svg';
 import FooterShadow from '../images/footer-shadow.svg';
@@ -10,95 +12,132 @@ import HeaderShadowDesktopImg from '../images/header-shadow-desktop.svg';
 import HeaderShadowGreenImg from '../images/header-shadow-green.svg';
 import HeaderShadowImg from '../images/header-shadow.svg';
 import { tryGetAccount, tryObtainBadge } from '../poap-eth';
-import { useBodyClassName, useAsync } from '../react-helpers';
-import { Link } from 'react-router-dom';
+import { useAsync, useBodyClassName } from '../react-helpers';
 
 type ClaimPageState = {
   event: null | PoapEvent;
   invalidEventFlag: boolean;
 };
 
-// interface ClaimState {}
-// function claimReducer(state: ClaimState, action: ClaimAction): ClaimState {}
-
-export const ClaimPage: React.FC<RouteComponentProps<{ event: string }>> = ({ match }) => {
-  const [finished, setFinished] = useState(false);
-  useBodyClassName(finished ? 'eventsapp green' : 'eventsapp');
-  const [account, fetchingAccount, fetchAccountError] = useAsync(tryGetAccount);
-  const getEventMemo = useCallback(() => getEvent(match.params.event), [match]);
-
+export const LoadEvent: React.FC<{
+  fancyId: string;
+  render: (event: PoapEvent) => React.ReactElement;
+}> = ({ fancyId, render }) => {
+  const getEventMemo = useCallback(() => getEvent(fancyId), [fancyId]);
   const [event, fetchingEvent, fetchEventError] = useAsync(getEventMemo);
-  const obtainBadge = useCallback(async () => {
-    await tryObtainBadge(event!, account!);
-    setFinished(true);
-  }, [event, account]);
 
   if (event == null || fetchEventError) {
-    return (
-      <>
-        <div>Invalid Event</div>
-        <ClaimFooter />
-      </>
-    );
+    return <ClaimFooter />;
+  } else if (fetchingEvent) {
+    return <Loading />;
   }
-  if (fetchingEvent) {
-    return (
-      <>
-        <div>Loading...</div>
-        <ClaimFooter />
-      </>
-    );
+  return render(event);
+};
+
+export const CheckAccount: React.FC<{
+  render: (address: string) => React.ReactElement;
+}> = ({ render }) => {
+  const [account, fetchingAccount, fetchAccountError] = useAsync(tryGetAccount);
+  if (fetchingAccount) {
+    return <p>Checking Browser for Web3</p>;
+  } else if (fetchAccountError) {
+    return <p className="error">There was a problem obtaining your acocunt</p>;
+  } else if (account == null) {
+    return <p className="error">You need a Web3 enabled browser to get your badge here</p>;
   }
+
+  return render(account);
+};
+
+export const ClaimPage: React.FC<RouteComponentProps<{ event: string }>> = ({ match }) => {
+  return (
+    <>
+      <LoadEvent fancyId={match.params.event} render={event => <ClaimPageInner event={event} />} />
+      <ClaimFooter />
+    </>
+  );
+};
+
+enum ClaimState {
+  Iddle,
+  Working,
+  Finished,
+  Failed,
+}
+
+const ClaimPageInner: React.FC<{ event: PoapEvent }> = ({ event }) => {
+  const [claimState, setClaimState] = useState(ClaimState.Iddle);
+  const obtainBadge = useCallback(async (event: PoapEvent, account: string) => {
+    setClaimState(ClaimState.Working);
+    try {
+      await tryObtainBadge(event, account);
+      setClaimState(ClaimState.Finished);
+    } catch (err) {
+      setClaimState(ClaimState.Failed);
+    }
+  }, []);
+  useBodyClassName(claimState ? 'eventsapp green' : 'eventsapp');
 
   return (
     <>
       <ClaimHeader event={event} />
-      <main id="site-main" role="main" className={classNames('main-events', finished && 'green')}>
+      <main id="site-main" role="main" className={classNames('main-events', claimState && 'green')}>
         <div className="image-main">
-          <img alt="" src={finished ? HeaderShadowGreenImg : HeaderShadowImg} className="mobile" />
-          <img
-            alt=""
-            src={finished ? HeaderShadowDesktopGreenImg : HeaderShadowDesktopImg}
-            className="desktop"
+          <ResponsiveImg
+            mobile={claimState ? HeaderShadowGreenImg : HeaderShadowImg}
+            desktop={claimState ? HeaderShadowDesktopGreenImg : HeaderShadowDesktopImg}
           />
         </div>
         <div className="main-content">
           <div className="container">
             <div className="content-event" data-aos="fade-up" data-aos-delay="300">
-              {fetchingAccount ? (
-                <p>Checking Browser for Web3</p>
-              ) : account == null ? (
-                <p className="error">You need a Web3 enabled browser to get your badge here</p>
-              ) : (
-                <>
-                  <h2>Wallet</h2>
-                  <p className="wallet-number">{account}</p>
-                  {finished ? (
-                    <>
-                      <h3>You’re all set!</h3>
-                      <p>Your new badge will show up shortly on</p>
-                      <Link to={`/scan/${account}`}>
-                        <button className="btn">POAPScan</button>
-                      </Link>
-                      <p>Smash that refresh button</p>
-                    </>
-                  ) : (
-                    <button className="btn" onClick={obtainBadge}>
-                      <span>I am right here</span>
-                      <br />
-                      <span className="small-text">so give me by badge</span>
-                    </button>
-                  )}
-                </>
-              )}
+              <CheckAccount
+                render={account => (
+                  <>
+                    <h2>Wallet</h2>
+                    <p className="wallet-number">{account}</p>
+                    {claimState === ClaimState.Iddle && (
+                      <ClaimButton obtainBadge={() => obtainBadge(event, account)} />
+                    )}
+                    {claimState === ClaimState.Working && <Loading />}
+                    {claimState === ClaimState.Finished && (
+                      <>
+                        <h3>You’re all set!</h3>
+                        <p>Your new badge will show up shortly on</p>
+                        <Link to={`/scan/${account}`}>
+                          <button className="btn">POAPScan</button>
+                        </Link>
+                        <p>Smash that refresh button</p>
+                      </>
+                    )}
+                    {claimState === ClaimState.Failed && (
+                      <p className="error">There was an error with your claim</p>
+                    )}
+                  </>
+                )}
+              />
             </div>
           </div>
         </div>
       </main>
-      <ClaimFooter />
     </>
   );
 };
+
+const ResponsiveImg: React.FC<{ mobile: string; desktop: string }> = ({ mobile, desktop }) => (
+  <>
+    <img alt="" src={mobile} className="mobile" />
+    <img alt="" src={desktop} className="desktop" />
+  </>
+);
+
+const ClaimButton: React.FC<{ obtainBadge: () => void }> = ({ obtainBadge }) => (
+  <button className="btn" onClick={obtainBadge}>
+    <span>I am right here</span>
+    <br />
+    <span className="small-text">so give me by badge</span>
+  </button>
+);
 
 const ClaimHeader: React.FC<{ event: PoapEvent }> = ({ event }) => (
   <header id="site-header" role="banner" className="header-events">
