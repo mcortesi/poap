@@ -226,7 +226,7 @@ export default async function routes(fastify: FastifyInstance) {
       schema: {
         body: {
           type: 'object',
-          required: ['eventIds', 'addresses'],
+          required: ['eventIds', 'address'],
           properties: {
             eventIds: { type: 'array', minItems: 1, items: { type: 'integer', minimum: 1 } },
             address: 'address#',

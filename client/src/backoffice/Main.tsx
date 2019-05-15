@@ -3,7 +3,7 @@ import { slide as Menu } from 'react-burger-menu';
 import { Link, Route, withRouter } from 'react-router-dom';
 import { AuthContext } from '../auth';
 import PoapLogo from '../images/POAP.svg';
-import { IssuePage } from './IssuePage';
+import { IssueForEventPage, IssueForUserPage } from './IssuePage';
 import { EventsPage } from './EventsPage';
 
 export const MintersPage = () => <div> This is a MintersPage </div>;
@@ -15,8 +15,11 @@ const NavigationMenu = withRouter(({ history }) => {
 
   return (
     <Menu isOpen={isOpen} onStateChange={state => setIsOpen(state.isOpen)} right>
-      <Link to="/admin/issue" onClick={closeMenu}>
-        Issue tokens
+      <Link to="/admin/issue-for-event" onClick={closeMenu}>
+        Issue Tokens For Event
+      </Link>
+      <Link to="/admin/issue-for-user" onClick={closeMenu}>
+        Issue Tokens For User
       </Link>
       <Link to="/admin/events" onClick={closeMenu}>
         Manage Events
@@ -58,7 +61,8 @@ export const BackOffice: React.FC = () => (
     <main className="app-content">
       <div className="container">
         <div className="bk-container">
-          <Route path="/admin/issue" component={IssuePage} />
+          <Route path="/admin/issue-for-event" component={IssueForEventPage} />
+          <Route path="/admin/issue-for-user" component={IssueForUserPage} />
           <Route path="/admin/events" component={EventsPage} />
           <Route path="/admin/minters" component={MintersPage} />
         </div>

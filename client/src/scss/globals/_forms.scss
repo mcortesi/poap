@@ -13,6 +13,10 @@ form {
     // float: left;
     font-family: $font-family;
     // clear: both;
+
+    &.error {
+      border: 2px solid #e13c5d;
+    }
   }
 
   ::-webkit-input-placeholder {

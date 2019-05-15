@@ -40,7 +40,8 @@
     display: block;
   }
 
-  input {
+  input,
+  textarea {
     max-width: none;
 
     &.error {
@@ -59,7 +60,7 @@
 
 .bk-error {
   color: #e13c5d;
-  margin: 0 auto 16px;
+  margin: 0 0 16px;
 
   // margin-top: 5px;
   // @include x-rem(font-size, 14px);
@@ -70,4 +71,16 @@
 .btn.loading {
   background: url('../images/loading.svg') no-repeat center center #ccc4f7;
   background-size: 30px;
+}
+
+.bk-msg-error {
+  color: #e13c5d;
+  margin: 16px 0;
+  font-weight: bold;
+}
+
+.bk-msg-ok {
+  color: #3d9423;
+  margin: 16px 0;
+  font-weight: bold;
 }

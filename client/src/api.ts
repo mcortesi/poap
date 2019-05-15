@@ -47,6 +47,20 @@ async function fetchJson<A>(input: RequestInfo, init?: RequestInit): Promise<A> 
   }
 }
 
+async function secureFetchNoResponse(input: RequestInfo, init?: RequestInit): Promise<void> {
+  const bearer = 'Bearer ' + (await authClient.getAPIToken());
+  const res = await fetch(input, {
+    ...init,
+    headers: {
+      Authorization: bearer,
+      ...(init ? init.headers : {}),
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`Request Failed => statusCode: ${res.status} msg: ${res.statusText}`);
+  }
+}
+
 export function resolveENS(name: string): Promise<ENSQueryResult> {
   return fetchJson(`${API_BASE}/actions/ens_resolve?name=${encodeURIComponent(name)}`);
 }
@@ -96,47 +110,36 @@ export async function requestProof(
 }
 
 export async function mintEventToManyUsers(eventId: number, addresses: string[]): Promise<any> {
-  const bearer = 'Bearer ' + (await authClient.getAPIToken());
-  return fetchJson(`${API_BASE}/actions/mintEventToManyUsers`, {
+  return secureFetchNoResponse(`${API_BASE}/actions/mintEventToManyUsers`, {
     method: 'POST',
     body: JSON.stringify({
       eventId,
       addresses,
     }),
     headers: {
-      Authorization: bearer,
       'Content-Type': 'application/json',
     },
   });
 }
 export async function mintUserToManyEvents(eventIds: number[], address: string): Promise<any> {
-  const bearer = 'Bearer ' + (await authClient.getAPIToken());
-  return fetchJson(`${API_BASE}/actions/mintUserToManyEvents`, {
+  return secureFetchNoResponse(`${API_BASE}/actions/mintUserToManyEvents`, {
     method: 'POST',
     body: JSON.stringify({
       eventIds,
       address,
     }),
     headers: {
-      Authorization: bearer,
       'Content-Type': 'application/json',
     },
   });
 }
 
 export async function updateEvent(event: PoapEvent) {
-  const bearer = 'Bearer ' + (await authClient.getAPIToken());
-  const res = await fetch(`${API_BASE}/actions/events/${event.fancy_id}`, {
+  return secureFetchNoResponse(`${API_BASE}/actions/events/${event.fancy_id}`, {
     method: 'PUT',
     body: JSON.stringify(event),
     headers: {
-      Authorization: bearer,
       'Content-Type': 'application/json',
     },
   });
-
-  if (!res.ok) {
-    console.log(res.status);
-    throw new Error();
-  }
 }

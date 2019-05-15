@@ -5,6 +5,7 @@ import { Link, Switch, Route, RouteComponentProps } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage, FieldProps } from 'formik';
 import { object, string } from 'yup';
 import classNames from 'classnames';
+import { SubmitButton } from '../components/SubmitButton';
 
 export const EventsPage: React.FC = () => {
   return (
@@ -71,7 +72,6 @@ const EditEventForm: React.FC<
     return <div>Loading...</div>;
   }
 
-  console.log(event);
   return (
     <Formik
       initialValues={event}
@@ -106,25 +106,12 @@ const EditEventForm: React.FC<
           <EventField title="Signer Url" name="signer_ip" />
           <EventField title="Signer Address" name="signer" />
 
-          <SubmitButton isSubmitting={isSubmitting} canSubmit={dirty && isValid} />
+          <SubmitButton text="Save" isSubmitting={isSubmitting} canSubmit={dirty && isValid} />
         </Form>
       )}
     </Formik>
   );
 };
-
-const SubmitButton: React.FC<{ isSubmitting: boolean; canSubmit: boolean }> = ({
-  isSubmitting,
-  canSubmit,
-}) => (
-  <button
-    className={classNames('btn', isSubmitting && 'loading')}
-    type="submit"
-    disabled={isSubmitting || !canSubmit}
-  >
-    {isSubmitting ? '' : 'Save'}
-  </button>
-);
 
 type EventFieldProps = {
   title: string;
