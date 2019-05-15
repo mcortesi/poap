@@ -2,6 +2,8 @@ import createAuth0Client from '@auth0/auth0-spa-js';
 import React from 'react';
 import Auth0Client from '@auth0/auth0-spa-js/dist/typings/src/Auth0Client';
 
+const BASE_URI = `${window.location.protocol}//${window.location.host}`;
+
 export class AuthService {
   private client!: Auth0Client;
   private _isAuthenticated: boolean = false;
@@ -14,7 +16,7 @@ export class AuthService {
     this.client = await createAuth0Client({
       domain: 'poapauth.auth0.com',
       client_id: 'bLaYZ7f1NQZ7K0oY6v4wAFliLRVbxqjc',
-      redirect_uri: 'http://localhost:3000/callback',
+      redirect_uri: `${BASE_URI}/callback`,
       audience: 'poap-api',
     });
     this._isAuthenticated = await this.client.isAuthenticated();
@@ -27,7 +29,7 @@ export class AuthService {
     localStorage.setItem(nonce, onSuccessPath);
 
     await this.client.loginWithRedirect({
-      redirect_uri: 'http://localhost:3000/callback',
+      redirect_uri: `${BASE_URI}/callback`,
       appState: nonce,
     });
   }
@@ -51,7 +53,7 @@ export class AuthService {
   }
 
   logout() {
-    this.client.logout({ returnTo: 'http://localhost:3000/' });
+    this.client.logout({ returnTo: BASE_URI });
   }
 }
 

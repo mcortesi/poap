@@ -47,11 +47,40 @@ After each time you run ganache, you'll need to deploy contracts:
 
 ### Deploy to ropsten (first time only)
 
+    cd eth/
     npx zos session --network ropsten --from 0x79A560De1CD436d1D69896DDd8DcCb226f9Fa2fD --expires 3600
     npx zos push
     npx zos create Poap --init initialize --args '"POAP","The Proof of Attendance Protocol","https://ropsten.poap.xyz",[]'
 
 This was already done. The POAP Address is: `0x50C5CA3e7f5566dA3Aa64eC687D283fdBEC2A2F2`
+
+### Update Contract logic
+
+If you change contract logic and want to update it:
+
+    # Make sure there is no running session for zos (check for existent eth/.zos.session )
+    cd eth/
+    npx zos session --network ropsten --from 0x79A560De1CD436d1D69896DDd8DcCb226f9Fa2fD --expires 3600
+    npx zos push
+    npx zos update Poap
+
+### Deploy Client (firebase)
+
+    cd client
+    yarn deploy   # Will build & run firebase deploy
+
+### Deploy Server (google app engine)
+
+Prerequisites:
+
+    1. Make sure you have the `app.yaml` in `server/`. This file is not in the github repository
+    2. Make sure you have google-cloud-skd installed and in your $PATH.
+    3. Maker sure you have already run `gcloud init`
+
+Steps:
+
+    cd server/
+    gcloud app deploy --verbosity=info
 
 ### Migrate Token Owner from Old Contract
 
