@@ -4,15 +4,14 @@
   "description": "POAP Issuer",
   "main": "dist/index.js",
   "scripts": {
-    "postinstall": "yarn build-ts",
-    "build": "yarn build-ts",
-    "build-ts": "tsc",
     "clean": "rm -rf ./dist",
+    "postinstall": "yarn build-ts",
+    "build": "tsc",
     "start": "node ./dist/index.js",
     "start:dev": "ts-node-dev ./src/index.ts | pino-pretty",
     "debug": "node --inspect=5858 -r ts-node/register ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch-ts": "tsc --watch"
+    "deploy": "gcloud app deploy --verbosity=info"
   },
   "author": "Mariano Cortesi <mcortesi@gmail.com>",
   "license": "ISC",
