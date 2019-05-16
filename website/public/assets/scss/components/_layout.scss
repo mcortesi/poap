@@ -22,7 +22,8 @@ header {
 	.logo {
 		width: 50px;
 		float: left;
-
+        position:relative;
+        z-index: 100;
 		@media (min-width: $bp-m) {
 			width: 60px;
 		}
@@ -62,11 +63,11 @@ header {
 main {
 	position: relative;
     top: -90px;
-    z-index: -1;
+    z-index: 0;
 	
 	@media (min-width: $bp-l) {
 		top: -130px;
-	}
+	} 
 }
 
 /* ================================================================
