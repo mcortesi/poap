@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "depploy": "firebase deploy"
+  },
+  "dependencies": {
+    "firebase-tools": "^6.9.2"
+  },
+  "name": "poap-website",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Mariano Cortesi <mcortesi@gmail.com>",
+  "license": "MIT"
+}

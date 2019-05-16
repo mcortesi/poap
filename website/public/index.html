@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Mobile-friendly viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>POAP - Homepage</title>
+    <!-- Style sheet link -->
+    <link href="assets/css/main.min.css" rel="stylesheet" media="all" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Archivo+Narrow:400,500,700|Archivo:400,500,700"
+      rel="stylesheet"
+    />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png" />
+  </head>
+
+  <body>
+    <!-- HEADER -->
+    <header id="site-header" role="banner">
+      <div class="container">
+        <div class="logo">
+          <a href="index.html"><img src="assets/images/POAP.svg" alt="POAP" role="img"/></a>
+        </div>
+
+        <div class="toggle-menu">
+          <button type="button" role="button" aria-label="Toggle Navigation" class="menu-hamburger">
+            <span class="lines"></span>
+          </button>
+        </div>
+
+        <div class="navigation">
+          <nav class="main-nav">
+            <ul>
+              <li><a href="#start" class="anchor">Start</a></li>
+              <li><a href="#faqs" class="anchor">F.A.Q.</a></li>
+              <li><a href="#contact" class="anchor">Contact</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </header>
+    <div class="fix-element"></div>
+
+    <!-- MAIN CONTENT -->
+    <main id="site-main" role="main" class="main-events">
+      <section class="banner">
+        <div class="container">
+          <div class="banner-content">
+            <h1 id="start">POAP - The Proof  of Attendance Protocol</h1>
+            <p class="subtitle">Go places. Get badges. Dazzle your friends.</p>
+            <p>
+              POAP is a protocol for issuing and displaying cool NFT crypto-badges originally built
+              during the ETHDenver 2019 hackathon.
+            </p>
+
+            <a href="https://ethparis.poap.xyz">
+              <button>At ETHParis? Get your badge</button>
+            </a>
+          </div>
+        </div>
+
+        <div class="image-shape">
+          <img src="assets/images/main-illus.svg" alt="" class="desktop" role="img" />
+          <img src="assets/images/main-illus-mobile.svg" alt="" class="mobile" role="img" />
+        </div>
+      </section>
+      <!-- FAQ -->
+      <section class="faqs-first" id="faqs">
+        <div class="faqs-container">
+          <div class="container">
+            <h2>FAQS</h2>
+            <div class="container-faqs">
+              <div class="faq" data-aos="fade-right">
+                <img src="assets/images/faq-1.svg" alt="" />
+              </div>
+              <div class="faq" data-aos="fade-left">
+                <h3>What is POAP again?</h3>
+                <p>
+                  It's a system that event organizers can easily use to distribute attendance
+                  crypto-badges to people that show up, a tool for attendees to display and share
+                  the badges they have obtained and an open standard for Dapp developers to build on
+                  top of.
+                </p>
+              </div>
+            </div>
+
+            <div class="container-faqs inverse">
+              <div class="faq" data-aos="fade-left">
+                <img src="assets/images/faq-2.svg" alt="" role="img" />
+              </div>
+              <div class="faq" data-aos="fade-right">
+                <h3>Why would I want to get badges?</h3>
+                <p>
+                  Here are some things that could happen when you obtain POAP badges: <br />Collect
+                  cool badges <br />Impress your crypto buddies(*) <br />Enter a Lambo giveaway(*)
+                </p>
+                <p class="disclaimer">
+                  (*) Results not guaranteed. Any expectations of recognition, prizes, privileges or
+                  earnings are your own.
+                </p>
+              </div>
+            </div>
+
+            <div class="container-faqs">
+              <div class="faq" data-aos="fade-right">
+                <img src="assets/images/faq-3.svg" alt="" role="img" />
+              </div>
+              <div class="faq" data-aos="fade-left">
+                <h3>How are POAP badges implemented?</h3>
+                <p>
+                  POAP badges are ERC-721 tokens. Once minted, they can be viewed on
+                  <a href="https://scan.poap.xyz">POAPscan</a>
+                  or any NFT-enabled interface (<a
+                    href="https://etherscan.io/token/0xa1eb40c284c5b44419425c4202fa8dabff31006b"
+                    >Etherscan</a
+                  >, <a href="https://opensea.io/assets/poap">OpenSea</a>) and most mobile wallets.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="faqs-second">
+        <div class="image-shape">
+          <img src="assets/images/shapes/faqrose1.svg" alt="" class="desktop" role="img" />
+          <img src="assets/images/shapes/faqrose2.svg" alt="" class="mobile" role="img" />
+        </div>
+        <div class="faqs-container">
+          <div class="container">
+            <div class="container-faqs inverse" data-aos="fade-left">
+              <div class="faq">
+                <img src="assets/images/faq-4.svg" alt="" role="img" />
+              </div>
+              <div class="faq" data-aos="fade-right">
+                <h3>How do I get badges?</h3>
+                <p>
+                  How you actually get the badges depends on the alternative(s) chosen by the event
+                  organizer to attest your presence.
+                </p>
+                <p>Current options include:</p>
+                <h4>Batch delivery of badges</h4>
+                <span
+                  >(if you gave a wallet address when you signed up, an organizer can airdrop you a
+                  badge)</span
+                >
+                <h4>Manual sending</h4>
+                <span
+                  >(an organizer can scan your wallet address and send you a badge on the
+                  spot)</span
+                >
+                <h4>Self service claim</h4>
+                <span
+                  >(an intranet-only Dapp that is available within the event's WiFi will give you
+                  your badge)</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="faqs-third">
+        <div class="image-shape">
+          <img src="assets/images/shapes/faqrose3.svg" alt="" class="desktop" role="img" />
+          <img src="assets/images/shapes/faqrose4.svg" alt="" class="mobile" role="img" />
+        </div>
+        <div class="faqs-container">
+          <div class="container">
+            <div class="container-faqs bottom">
+              <div class="faq" data-aos="fade-right">
+                <img src="assets/images/faq-5.svg" alt="" />
+              </div>
+              <div class="faq" data-aos="fade-left">
+                <h3>How do I get badges?</h3>
+                <p>For our ETHParis launch, we are distributing badges in two ways:</p>
+                <p>
+                  Connect to the <a href="#">Ethglobalwifi WiFi</a> network and go to
+                  <a href="http://ethparis.poap.xyz">http://ethparis.poap.xyz</a> with a Dapp
+                  browser (Metamask, Trust, etc). This WiFi has been very spotty though so YMMV :(
+                </p>
+                <p>
+                  Come see us near the entrance of the hacker space or reach out to us on Discord or
+                  Telegram and we will manually give you a badge. For a limited time only, we are
+                  also handing out badges of previous events if you can provide some proof of having
+                  been there (for example, we saw you there, or you have a picture of yourself
+                  there, or you have a message signed by Vitalik that says you were)
+                </p>
+              </div>
+            </div>
+            <div class="container-faqs">
+              <div class="faq" data-aos="fade-right">
+                <h3>How can I use POAP for my event?</h3>
+                <p>
+                  If you want to use POAP to distribute attendance badges at your event,
+                  <a href="#"> contact us so we can hook you up</a>. All you need to provide is a
+                  badge design and some event metadata (event name, location, date).
+                </p>
+              </div>
+              <div class="faq"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Cool people -->
+      <section class="cool-people">
+        <div class="image-shape">
+          <img src="assets/images/shapes/coolpeople1.svg" alt="" class="desktop" role="img" />
+          <img src="assets/images/shapes/coolpeople2.svg" alt="" class="mobile" role="img" />
+        </div>
+
+        <div class="cool-people-content">
+          <div class="container">
+            <h3 data-aos="fade-up">Who is using POAP?</h3>
+            <p data-aos="fade-up" data-aos-delay="300">All the cool kids are doing it.</p>
+          </div>
+          <img src="assets/images/cool-people-mobile.svg" alt="" class="mobile" role="img" />
+          <img src="assets/images/cool-people.svg" alt="" class="desktop" role="img" />
+        </div>
+      </section>
+
+      <!-- Pattern -->
+      <section class="patterns">
+        <img src="assets/images/patternbig.svg" alt="" class="desktopp" role="img" />
+        <img src="assets/images/patternmedium.svg" alt="" class="tabletp" role="img" />
+        <img src="assets/images/patternsmall.svg" alt="" class="mobilep" role="img" />
+      </section>
+
+      <!-- Who you are -->
+      <section class="who-are">
+        <div class="container">
+          <div class="container-who">
+            <div class="info-who" data-aos="fade-right" data-aos-delay="500">
+              <h3>What are some things that could be built on POAP?</h3>
+              <p>
+                Here are some truly marvelous features and ideas that this hackathon was too brief
+                to contain:
+              </p>
+              <h4>Integrate a proper proof of space-time protocol (XYO, FOAM)</h4>
+              <p>for more resilient presence attestation</p>
+              <h4>Integrate with Kickback</h4>
+              <p>
+                to seamlessly handle refunds of deposits to people that attend (send deposit, attend
+                event, get badge + automated refund)
+              </p>
+              <h4>Implement privacy preserving mechanisms (proxy reencryption?)</h4>
+              <p>
+                for finer grained disclosure of information (i.e. prove you went somewhere without
+                disclosing your entire list of past events)
+              </p>
+            </div>
+            <div class="info-who" data-aos="fade-left" data-aos-delay="500">
+              <h3>Is that it?</h3>
+              <p>
+                Actually, no. If we think bigger, a system like POAP that gets traction and
+                eventually critical mass could become an identity mechanism with zero personal
+                information exposure (we don't use names or national ID). Starting with a seemingly
+                innocent use case (cute badges for event attendance) can help us bootstrap a system
+                that could have important ramifications, but where the main obstacle to overcome is
+                user adoption.
+              </p>
+              <p>
+                A POAP track record could become an indicator of trustworthiness for things as
+                simple as streamlined admission to oversubscribed events, or as complex as a Dharma
+                credit risk calculation.
+              </p>
+            </div>
+          </div>
+          <div class="container-who">
+            <div class="info-who" data-aos="fade-right" data-aos-delay="500">
+              <img src="assets/images/who-are.svg" alt="Who is behing POAP?" />
+            </div>
+            <div class="info-who" data-aos="fade-left" data-aos-delay="500">
+              <h3>Who is behind POAP?</h3>
+              <p>
+                The POAP hackers at ETHDenver 2019 were @reneil1337,
+                <a href="https://twitter.com/dmf7z" target="_blank">@dmf7z</a>,
+                <a href="https://twitter.com/worthalter" target="_blank">@worthalter</a> and
+                <a href="https://twitter.com/gomox_ar" target="_blank">@gomox_ar</a>. <br />If you
+                want to be involved or contribute, don't hesitate to contact us as we want to share
+                in the fun.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Back to the future -->
+      <section class="backtofuture">
+        <div class="image-shape">
+          <img src="assets/images/shapes/backtofuture2.svg" alt="" class="desktop" role="img" />
+          <img src="assets/images/shapes/backtofuture1.svg" alt="" class="mobile" role="img" />
+        </div>
+        <div class="backtofuture-content">
+          <div class="container">
+            <h3 data-aos="fade-up" data-aos-delay="700">How do you make money?</h3>
+
+            <div class="globe" data-aos="fade-up" data-aos-delay="1000">
+              <p>Where we are going we don't need money</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Funny info -->
+      <section class="funny-info">
+        <div class="image-shape">
+          <img src="assets/images/shapes/funnyinfo2.svg" alt="" class="desktop" role="img" />
+          <img src="assets/images/shapes/funnyinfo1.svg" alt="" class="mobile" role="img" />
+        </div>
+        <div class="backtofuture-content">
+          <div class="container">
+            <div class="funny-container">
+              <div class="item poe" data-aos="fade-up" data-aos-delay="600">
+                <h3>Who's your favorite writer?</h3>
+                <p>Edgar Allan Poe</p>
+                <img src="assets/images/poe.svg" alt="Edgar Allan Poe" role="img" />
+              </div>
+              <div class="item" data-aos="fade-up" data-aos-delay="800">
+                <h3>What's your favorite Teletubbies character?</h3>
+                <p>Po</p>
+                <img src="assets/images/teletubbies.svg" alt="Po" role="img" />
+              </div>
+              <div class="item" data-aos="fade-up" data-aos-delay="1000">
+                <h3>How do you guys move around?</h3>
+                <p>In the POAPmobile, obviously.</p>
+                <img src="assets/images/papamovil.svg" alt="POAPmobile" role="img" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Supposed to be funny -->
+      <section class="supposed-funny">
+        <div class="image-shape">
+          <img src="assets/images/shapes/funny2.svg" alt="" class="desktop" role="img" />
+          <img src="assets/images/shapes/funny1.svg" alt="" class="mobile" role="img" />
+        </div>
+        <div class="supposed-funny-content">
+          <div class="container">
+            <h3 data-aos="fade-up">Is this supposed to be funny?</h3>
+            <p data-aos="fade-up">We think so.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer role="contentinfo" id="contact">
+      <div class="image-shape">
+        <img src="assets/images/shapes/footerd.svg" alt="" class="desktop" role="img" />
+        <img src="assets/images/shapes/footerm.svg" alt="" class="mobile" role="img" />
+      </div>
+      <div class="footer-content">
+        <div class="container">
+          <h5>How can I contact you or get involved?</h5>
+          <p>
+            POAP is open source and community owned. Our intention is for POAP to become a community
+            commons, so if you are interested in contributing, participating or integrating with
+            POAP in any way, do not hesitate to contact us using the following links:
+          </p>
+          <ul class="social-icons">
+            <li>
+              <a href="https://twitter.com/poapxyz/"
+                ><img src="assets/images/logo-twitter.svg" alt="Twitter"
+              /></a>
+            </li>
+            <li>
+              <a href="https://t.me/poapxyz"
+                ><img src="assets/images/logo-telegram.svg" alt="Telegram"
+              /></a>
+            </li>
+            <li>
+              <a href="https://github.com/gomox/poap/"
+                ><img src="assets/images/logo-git.svg" alt="Github"
+              /></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    <script src="assets/js/jquery-1.12.4.min.js"></script>
+    <script src="assets/js/functions.min.js"></script>
+    <script>
+      AOS.init({
+        once: true,
+      });
+    </script>
+  </body>
+</html>
