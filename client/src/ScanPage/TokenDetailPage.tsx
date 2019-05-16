@@ -1,12 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
-import { TokenInfo, getTokenInfo } from '../api';
-import HeaderShadowImg from '../images/header-shadow.svg';
-import HeaderShadowDesktopImg from '../images/header-shadow-desktop.svg';
-import TelegramImg from '../images/telegram.svg';
-import TwitterImg from '../images/twitter.svg';
-import { useBodyClassName } from '../react-helpers';
 import { Link } from 'react-router-dom';
+import {
+  RedditIcon,
+  RedditShareButton,
+  TelegramIcon,
+  TelegramShareButton,
+  TwitterIcon,
+  TwitterShareButton,
+} from 'react-share';
+import { getTokenInfo, TokenInfo } from '../api';
+import HeaderShadowDesktopImg from '../images/header-shadow-desktop.svg';
+import HeaderShadowImg from '../images/header-shadow.svg';
+import { useBodyClassName } from '../react-helpers';
 
 type TokenPageState = {
   token: null | TokenInfo;
@@ -69,14 +75,33 @@ export const TokenDetailPage: React.FC<
               <h2>Brog on the interwebz</h2>
               <ul className="social-icons">
                 <li>
-                  <a href="">
+                  <TwitterShareButton
+                    url={window.location.toString()}
+                    title={`Look at my ${token.event.name} badge!`}
+                    via="poapxyz"
+                  >
+                    <TwitterIcon size={40} round iconBgStyle={{ fill: '#6534FF' }} />
+                  </TwitterShareButton>
+
+                  {/* <a href="">
                     <img src={TwitterImg} alt="Twitter" />
-                  </a>
+                  </a> */}
                 </li>
                 <li>
-                  <a href="#">
-                    <img src={TelegramImg} alt="Telegram" />
-                  </a>
+                  <TelegramShareButton
+                    url={window.location.toString()}
+                    title={`Look at my ${token.event.name} badge!`}
+                  >
+                    <TelegramIcon size={40} round iconBgStyle={{ fill: '#6534FF' }} />
+                  </TelegramShareButton>
+                </li>
+                <li>
+                  <RedditShareButton
+                    url={window.location.toString()}
+                    title={`Look at my ${token.event.name} badge!`}
+                  >
+                    <RedditIcon size={40} round iconBgStyle={{ fill: '#6534FF' }} />
+                  </RedditShareButton>
                 </li>
                 {/* <li>
                   <a href="#">

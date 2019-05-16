@@ -23,6 +23,7 @@
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.0",
     "react-scripts": "3.0.0",
+    "react-share": "^3.0.0",
     "typescript": "3.4.5",
     "yup": "^0.27.0"
   },
@@ -51,6 +52,7 @@
   "devDependencies": {
     "@types/react-burger-menu": "^2.2.5",
     "@types/react-router-dom": "^4.3.3",
+    "@types/react-share": "^2.1.1",
     "@types/yup": "^0.26.13"
   }
 }
