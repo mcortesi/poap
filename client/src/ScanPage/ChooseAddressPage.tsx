@@ -1,9 +1,41 @@
 import React, { useState, useCallback } from 'react';
-import { loginMetamask } from '../poap-eth';
-import { useToggleState } from '../react-helpers';
+import { loginMetamask, tryGetAccount, hasMetamask, isMetamaskLogged } from '../poap-eth';
+import { useToggleState, useAsync } from '../react-helpers';
 import { resolveENS } from '../api';
 import { getAddress } from 'ethers/utils';
 import classNames from 'classnames';
+import { Loading } from '../components/Loading';
+
+enum AccountState {
+  Checking,
+  Present,
+  NotPresent,
+  Failed,
+  MetamaskLoggedOut,
+}
+
+export const CheckAccount: React.FC<{
+  render: (address: null | string, state: AccountState) => React.ReactElement;
+}> = ({ render }) => {
+  const [account, fetchingAccount, fetchAccountError] = useAsync(async () => {
+    const account = await tryGetAccount();
+    return account;
+  });
+  const metamaskLoggedOut = hasMetamask() && !isMetamaskLogged();
+
+  let state = AccountState.Present;
+  if (fetchingAccount) {
+    state = AccountState.Checking;
+  } else if (fetchAccountError) {
+    state = AccountState.Failed;
+  } else if (account == null) {
+    state = AccountState.NotPresent;
+  } else if (metamaskLoggedOut) {
+    state = AccountState.MetamaskLoggedOut;
+  }
+
+  return render(account, state);
+};
 
 type ChooseAddressPageProps = {
   onAccountDetails: (account: string) => void;
@@ -18,6 +50,12 @@ export const ChooseAddressPage: React.FC<ChooseAddressPageProps> = ({ onAccountD
             The <span>Proof of attendance protocol</span> (POAP) reminds you off the{' '}
             <span>cool places</span> you’ve been to.
           </p>
+          {/* <CheckAccount
+              render={(account, state) => {
+                if (enterByHand)
+
+
+              }} /> */}
           {enterByHand ? (
             <AddressInput onAddress={onAccountDetails} />
           ) : (
@@ -49,15 +87,25 @@ type LoginButtonProps = {
 };
 
 const LoginButton: React.FC<LoginButtonProps> = ({ onAddress }) => {
+  const [gotAccount, setGotAccount] = useState<boolean | null>(null);
   const doLogin = useCallback(async () => {
-    const loginData = await loginMetamask();
-    onAddress(loginData.account);
+    const account = await tryGetAccount();
+    setGotAccount(account != null);
+    if (account) {
+      onAddress(account);
+    }
   }, [onAddress]);
   return (
-    <button className="btn" onClick={doLogin}>
-      <span>Login</span>
-      <br />
-      <span className="small-text">with Metamask</span>
+    <button className="btn" onClick={doLogin} disabled={gotAccount === false}>
+      {gotAccount === false ? (
+        <span>Can't Get Account</span>
+      ) : (
+        <>
+          <span>Login</span>
+          <br />
+          <span className="small-text">with Metamask</span>
+        </>
+      )}
     </button>
   );
 };

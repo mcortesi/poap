@@ -37,16 +37,19 @@ export const LoadEvent: React.FC<{
 export const CheckAccount: React.FC<{
   render: (address: string) => React.ReactElement;
 }> = ({ render }) => {
-  const [account, fetchingAccount, fetchAccountError] = useAsync(tryGetAccount);
+  const [account, fetchingAccount, fetchAccountError] = useAsync(async () => {
+    const account = await tryGetAccount();
+    return account;
+  });
   const metamaskLoggedOut = hasMetamask() && !isMetamaskLogged();
   if (fetchingAccount) {
     return <p>Checking Browser for Web3</p>;
   } else if (fetchAccountError) {
     return <p className="error">There was a problem obtaining your account</p>;
-  } else if (metamaskLoggedOut) {
-    return <p className="error">Metamask is Logged Out. Login and Refresh</p>;
   } else if (account == null) {
     return <p className="error">You need a Web3 enabled browser to get your badge here</p>;
+  } else if (metamaskLoggedOut) {
+    return <p className="error">Metamask is Logged Out. Login and Refresh</p>;
   }
 
   return render(account);
