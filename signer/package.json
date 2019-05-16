@@ -1,6 +1,6 @@
 {
   "name": "poap-signer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Signer Server for POAP",
   "main": "dist/poap-signer.js",
   "author": "Mariano Cortesi <mcortesi@gmail.com>",
