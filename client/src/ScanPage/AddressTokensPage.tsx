@@ -116,7 +116,12 @@ export class AddressTokensPage extends React.Component<
                 <div style={{ textAlign: 'center' }}>Waiting for your tokens... Hang tight</div>
               </>
             ) : this.state.tokens.length === 0 ? (
-              <div>Mmmm... You don't have any tokens...</div>
+              <div className={classNames('event-year', 'empty-year')} style={{ marginTop: '30px' }}>
+                <img src={NoEventsImg} alt="" />
+                <p className="image-description">
+                  You don't seem to have any tokens. You're quite a couch potato!
+                </p>
+              </div>
             ) : (
               this.renderTokens()
             )}
