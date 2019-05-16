@@ -133,7 +133,7 @@ const AddressInput: React.FC<AddressInputProps> = ({ onAddress }) => {
       setWorking(true);
       const ensResponse = await resolveENS(address);
       setWorking(false);
-      if (ensResponse.exists) {
+      if (ensResponse.valid) {
         onAddress(ensResponse.address);
       } else {
         setEnsError(true);

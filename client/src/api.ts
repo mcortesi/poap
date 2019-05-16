@@ -33,7 +33,7 @@ export interface ClaimProof {
   proof: string;
 }
 
-export type ENSQueryResult = { exists: false } | { exists: true; address: string };
+export type ENSQueryResult = { valid: false } | { valid: true; address: string };
 
 const API_BASE =
   process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://api.poap.xyz';
