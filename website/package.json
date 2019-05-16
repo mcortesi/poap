@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "depploy": "firebase deploy"
+    "deploy": "firebase deploy"
   },
   "dependencies": {
     "firebase-tools": "^6.9.2"
