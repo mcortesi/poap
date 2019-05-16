@@ -100,11 +100,12 @@ const LoginButton: React.FC<LoginButtonProps> = ({ onAddress }) => {
       {gotAccount === false ? (
         <span>Can't Get Account</span>
       ) : (
-        <>
-          <span>Login</span>
-          <br />
-          <span className="small-text">with Metamask</span>
-        </>
+        <span>Show me my Badges</span>
+        // <>
+        //   <span>Login</span>
+        //   <br />
+        //   <span className="small-text">with Metamask</span>
+        // </>
       )}
     </button>
   );

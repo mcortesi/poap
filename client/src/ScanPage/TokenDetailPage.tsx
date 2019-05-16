@@ -3,7 +3,10 @@ import { RouteComponentProps } from 'react-router';
 import { TokenInfo, getTokenInfo } from '../api';
 import HeaderShadowImg from '../images/header-shadow.svg';
 import HeaderShadowDesktopImg from '../images/header-shadow-desktop.svg';
+import TelegramImg from '../images/telegram.svg';
+import TwitterImg from '../images/twitter.svg';
 import { useBodyClassName } from '../react-helpers';
+import { Link } from 'react-router-dom';
 
 type TokenPageState = {
   token: null | TokenInfo;
@@ -60,24 +63,26 @@ export const TokenDetailPage: React.FC<
           <div className="container">
             <div className="content-event" data-aos="fade-up" data-aos-delay="300">
               <h2>Owner</h2>
-              <p className="wallet-number">{token.owner}</p>
+              <p className="wallet-number">
+                <Link to={`/scan/${token.owner}`}>{token.owner}</Link>
+              </p>
               <h2>Brog on the interwebz</h2>
               <ul className="social-icons">
                 <li>
-                  <a href="#">
-                    <img src="assets/images/twitter.svg" alt="Twitter" />
+                  <a href="">
+                    <img src={TwitterImg} alt="Twitter" />
                   </a>
                 </li>
                 <li>
                   <a href="#">
-                    <img src="assets/images/telegram.svg" alt="Twitter" />
+                    <img src={TelegramImg} alt="Telegram" />
                   </a>
                 </li>
-                <li>
+                {/* <li>
                   <a href="#">
                     <img src="assets/images/twitter.svg" alt="Twitter" />
                   </a>
-                </li>
+                </li> */}
               </ul>
             </div>
           </div>

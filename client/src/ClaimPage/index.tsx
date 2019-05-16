@@ -37,10 +37,7 @@ export const LoadEvent: React.FC<{
 export const CheckAccount: React.FC<{
   render: (address: string) => React.ReactElement;
 }> = ({ render }) => {
-  const [account, fetchingAccount, fetchAccountError] = useAsync(async () => {
-    const account = await tryGetAccount();
-    return account;
-  });
+  const [account, fetchingAccount, fetchAccountError] = useAsync(tryGetAccount);
   const metamaskLoggedOut = hasMetamask() && !isMetamaskLogged();
   if (fetchingAccount) {
     return <p>Checking Browser for Web3</p>;
@@ -49,7 +46,7 @@ export const CheckAccount: React.FC<{
   } else if (account == null) {
     return <p className="error">You need a Web3 enabled browser to get your badge here</p>;
   } else if (metamaskLoggedOut) {
-    return <p className="error">Metamask is Logged Out. Login and Refresh</p>;
+    return <div className="error">Metamask is Logged Out. Login and Refresh</div>;
   }
 
   return render(account);
@@ -72,7 +69,7 @@ enum ClaimState {
   MetaMaskLoggedOut,
 }
 
-const ClaimPageInner: React.FC<{ event: PoapEvent }> = ({ event }) => {
+const ClaimPageInner: React.FC<{ event: PoapEvent }> = React.memo(({ event }) => {
   const hasSigner = event.signer != null && event.signer_ip != null;
   const checkLocation = useCallback(() => checkSigner(event.signer_ip, event.id), [event]);
   const [onLocation, checkingLocation] = useAsync(checkLocation);
@@ -102,7 +99,12 @@ const ClaimPageInner: React.FC<{ event: PoapEvent }> = ({ event }) => {
         </div>
         <div className="main-content">
           <div className="container">
-            <div className="content-event" data-aos="fade-up" data-aos-delay="300">
+            <div
+              className="content-event"
+              data-aos="fade-up"
+              data-aos-delay="300"
+              style={{ minHeight: 65 }}
+            >
               <CheckAccount
                 render={account => (
                   <>
@@ -139,13 +141,15 @@ const ClaimPageInner: React.FC<{ event: PoapEvent }> = ({ event }) => {
       </main>
     </>
   );
-};
+});
 
-const ResponsiveImg: React.FC<{ mobile: string; desktop: string }> = ({ mobile, desktop }) => (
-  <>
-    <img alt="" src={mobile} className="mobile" />
-    <img alt="" src={desktop} className="desktop" />
-  </>
+const ResponsiveImg: React.FC<{ mobile: string; desktop: string }> = React.memo(
+  ({ mobile, desktop }) => (
+    <>
+      <img alt="" src={mobile} className="mobile" />
+      <img alt="" src={desktop} className="desktop" />
+    </>
+  )
 );
 
 type ClaimButtonProps = {
@@ -154,38 +158,35 @@ type ClaimButtonProps = {
   checkingLocation: boolean;
   hasSigner: boolean;
 };
-const ClaimButton: React.FC<ClaimButtonProps> = ({
-  obtainBadge,
-  onLocation,
-  checkingLocation,
-  hasSigner,
-}) => {
-  if (!hasSigner) {
+const ClaimButton: React.FC<ClaimButtonProps> = React.memo(
+  ({ obtainBadge, onLocation, checkingLocation, hasSigner }) => {
+    if (!hasSigner) {
+      return (
+        <button className="btn" disabled>
+          Venue is inactive
+        </button>
+      );
+    } else if (checkingLocation) {
+      return <button className="btn loading" disabled />;
+    } else if (!onLocation) {
+      return (
+        <button className="btn" disabled>
+          You're not on the venue!
+        </button>
+      );
+    }
+
     return (
-      <button className="btn" disabled>
-        Venue is inactive
-      </button>
-    );
-  } else if (checkingLocation) {
-    return <button className="btn loading" disabled />;
-  } else if (!onLocation) {
-    return (
-      <button className="btn" disabled>
-        You're not on the venue!
+      <button className="btn" onClick={obtainBadge}>
+        <span>I am right here</span>
+        <br />
+        <span className="small-text">so give me by badge</span>
       </button>
     );
   }
+);
 
-  return (
-    <button className="btn" onClick={obtainBadge}>
-      <span>I am right here</span>
-      <br />
-      <span className="small-text">so give me by badge</span>
-    </button>
-  );
-};
-
-const ClaimHeader: React.FC<{ event: PoapEvent }> = ({ event }) => (
+const ClaimHeader: React.FC<{ event: PoapEvent }> = React.memo(({ event }) => (
   <header id="site-header" role="banner" className="header-events">
     <div className="container">
       <h1>{event.name}</h1>
@@ -194,9 +195,9 @@ const ClaimHeader: React.FC<{ event: PoapEvent }> = ({ event }) => (
       </div>
     </div>
   </header>
-);
+));
 
-const ClaimFooter: React.FC = () => (
+const ClaimFooter: React.FC = React.memo(() => (
   <footer role="contentinfo" className="footer-events">
     <div className="image-footer">
       <img src={FooterShadow} className="mobile" alt="" />
@@ -212,7 +213,7 @@ const ClaimFooter: React.FC = () => (
       </div>
     </div>
   </footer>
-);
+));
 
 /**
  
