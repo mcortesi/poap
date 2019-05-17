@@ -1,7 +1,7 @@
 import { getDefaultProvider } from 'ethers';
 import { FastifyInstance } from 'fastify';
 import createError from 'http-errors';
-import { getEvent, getEventByFancyId, getEvents, updateEvent } from './db';
+import { getEvent, getEventByFancyId, getEvents, updateEvent, createEvent } from './db';
 import {
   getAllTokens,
   getTokenInfo,
@@ -121,79 +121,6 @@ export default async function routes(fastify: FastifyInstance) {
     }
   );
 
-  fastify.get(
-    '/token/:tokenId',
-    {
-      schema: {
-        params: {
-          tokenId: { type: 'integer' },
-        },
-      },
-    },
-    async (req, res) => {
-      const tokenId = req.params.tokenId;
-      const tokenInfo = await getTokenInfo(tokenId);
-      return tokenInfo;
-    }
-  );
-
-  fastify.get('/events', async (req, res) => {
-    const events = await getEvents();
-    return events;
-  });
-
-  fastify.get(
-    '/events/:fancyid',
-    {
-      schema: {
-        params: {
-          fancyid: { type: 'string' },
-        },
-      },
-    },
-    async (req, res) => {
-      const event = await getEventByFancyId(req.params.fancyid);
-      if (!event) {
-        return new createError.NotFound('Invalid Event');
-      }
-      return event;
-    }
-  );
-
-  fastify.put(
-    '/events/:fancyid',
-    {
-      preValidation: [fastify.authenticate],
-      schema: {
-        params: {
-          fancyid: { type: 'string' },
-        },
-        body: {
-          type: 'object',
-          required: ['signer', 'signer_ip', 'event_url', 'image_url'],
-          properties: {
-            signer: { anyOf: ['address#', { type: 'null' }] },
-            signer_ip: { anyOf: [{ type: 'string' }, { type: 'null' }] },
-            event_url: { type: 'string' },
-            image_url: { type: 'string' },
-          },
-        },
-      },
-    },
-    async (req, res) => {
-      const isOk = await updateEvent(req.params.fancyid, {
-        signer: req.body.signer,
-        signer_ip: req.body.signer_ip,
-        event_url: req.body.event_url,
-        image_url: req.body.image_url,
-      });
-      if (!isOk) {
-        return new createError.NotFound('Invalid event');
-      }
-      res.status(204);
-      return;
-    }
-  );
   fastify.post(
     '/actions/mintEventToManyUsers',
     {
@@ -267,6 +194,143 @@ export default async function routes(fastify: FastifyInstance) {
       } else {
         throw new createError.BadRequest('Invalid Claim');
       }
+    }
+  );
+
+  fastify.get(
+    '/token/:tokenId',
+    {
+      schema: {
+        params: {
+          tokenId: { type: 'integer' },
+        },
+      },
+    },
+    async (req, res) => {
+      const tokenId = req.params.tokenId;
+      const tokenInfo = await getTokenInfo(tokenId);
+      return tokenInfo;
+    }
+  );
+
+  //********************************************************************
+  // EVENTS
+  //********************************************************************
+
+  fastify.get('/events', () => getEvents());
+
+  fastify.get(
+    '/events/:fancyid',
+    {
+      schema: {
+        params: {
+          fancyid: { type: 'string' },
+        },
+      },
+    },
+    async (req, res) => {
+      const event = await getEventByFancyId(req.params.fancyid);
+      if (!event) {
+        return new createError.NotFound('Invalid Event');
+      }
+      return event;
+    }
+  );
+
+  fastify.post(
+    '/events',
+    {
+      preValidation: [fastify.authenticate],
+      schema: {
+        body: {
+          type: 'object',
+          required: [
+            'fancy_id',
+            'name',
+            'description',
+            'city',
+            'country',
+            'start_date',
+            'end_date',
+            'year',
+            'event_url',
+            'image_url',
+            'signer',
+            'signer_ip',
+          ],
+          properties: {
+            fancy_id: { type: 'string' },
+            name: { type: 'string' },
+            description: { type: 'string' },
+            city: { type: 'string' },
+            country: { type: 'string' },
+            start_date: { type: 'string' },
+            end_date: { type: 'string' },
+            year: { type: 'integer' },
+            event_url: { type: 'string' },
+            image_url: { type: 'string' },
+            signer: { anyOf: ['address#', { type: 'null' }] },
+            signer_ip: { anyOf: [{ type: 'string' }, { type: 'null' }] },
+          },
+        },
+      },
+    },
+    async (req, res) => {
+      const newEvent = {
+        fancy_id: req.body.fancy_id,
+        name: req.body.name,
+        description: req.body.description,
+        city: req.body.city,
+        country: req.body.country,
+        start_date: req.body.start_date,
+        end_date: req.body.end_date,
+        year: req.body.year,
+        event_url: req.body.event_url,
+        image_url: req.body.image_url,
+        signer: req.body.signer,
+        signer_ip: req.body.signer_ip,
+      };
+
+      const event = await createEvent(newEvent);
+      if (event == null) {
+        return new createError.BadRequest('Invalid event');
+      }
+      return event;
+    }
+  );
+
+  fastify.put(
+    '/events/:fancyid',
+    {
+      preValidation: [fastify.authenticate],
+      schema: {
+        params: {
+          fancyid: { type: 'string' },
+        },
+        body: {
+          type: 'object',
+          required: ['signer', 'signer_ip', 'event_url', 'image_url'],
+          properties: {
+            signer: { anyOf: ['address#', { type: 'null' }] },
+            signer_ip: { anyOf: [{ type: 'string' }, { type: 'null' }] },
+            event_url: { type: 'string' },
+            image_url: { type: 'string' },
+          },
+        },
+      },
+    },
+    async (req, res) => {
+      const isOk = await updateEvent(req.params.fancyid, {
+        signer: req.body.signer,
+        signer_ip: req.body.signer_ip,
+        event_url: req.body.event_url,
+        image_url: req.body.image_url,
+      });
+      if (!isOk) {
+        return new createError.NotFound('Invalid event');
+      }
+      res.status(204);
+      return;
     }
   );
 }

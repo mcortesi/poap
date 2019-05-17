@@ -364,10 +364,4 @@ VALUES
     'Germany',
     'https://ethberlin.com/'
   );
-update
-  events
-set
-  signer = '0xD8a188F7944325705af154c5a0E4347B8EF0aFB0',
-  signer_ip = 'localhost:9090'
-where
-  fancy_id = 'ethberlin-18';
+alter sequence events_id_seq restart with 28;

@@ -71,7 +71,7 @@ export const ChooseAddressPage: React.FC<ChooseAddressPageProps> = ({ onAccountD
                     toggleEnterByHand();
                   }}
                 >
-                  enter on address by hand
+                  enter an address by hand
                 </a>
               </p>
             </>

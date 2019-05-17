@@ -19,8 +19,8 @@ export interface PoapEvent {
   event_url: string;
   image_url: string;
   year: number;
-  start_date: Date;
-  end_date: Date;
+  start_date: string;
+  end_date: string;
 }
 
 export interface Claim extends ClaimProof {
@@ -151,6 +151,16 @@ export async function mintUserToManyEvents(eventIds: number[], address: string):
 export async function updateEvent(event: PoapEvent) {
   return secureFetchNoResponse(`${API_BASE}/events/${event.fancy_id}`, {
     method: 'PUT',
+    body: JSON.stringify(event),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+export async function createEvent(event: PoapEvent) {
+  return secureFetchNoResponse(`${API_BASE}/events`, {
+    method: 'POST',
     body: JSON.stringify(event),
     headers: {
       'Content-Type': 'application/json',

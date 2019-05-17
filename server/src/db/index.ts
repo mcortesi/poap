@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import pgPromise from 'pg-promise';
-import { PoapEvent } from '../types';
+import { PoapEvent, Omit } from '../types';
 
 const db = pgPromise()({
   host: process.env.INSTANCE_CONNECTION_NAME
@@ -45,6 +45,19 @@ export async function updateEvent(
     }
   );
   return res.rowCount === 1;
+}
+
+export async function createEvent(event: Omit<PoapEvent, 'id'>): Promise<PoapEvent> {
+  const data = await db.one(
+    'INSERT INTO events(${this:name}) VALUES(${this:csv}) RETURNING id',
+    // 'INSERT INTO events (${this:names}) VALUES (${this:list}) RETURNING id',
+    event
+  );
+
+  return {
+    ...event,
+    id: data.id as number,
+  };
 }
 
 // export async function insertEvent
