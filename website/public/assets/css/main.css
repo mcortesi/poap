@@ -580,7 +580,7 @@ h4 {
 h5 {
   font-size: 30px;
   font-size: 1.875rem;
-  color: #fff;
+  color: #4b4b4b;
   font-weight: 400; }
   @media (min-width: 60em) {
     h5 {
@@ -616,7 +616,7 @@ ol {
   ol li {
     font-size: 16px;
     font-size: 1rem;
-    color: #fff;
+    color: #4b4b4b;
     font-family: "Archivo", sans-serif;
     margin: 0 0 10px; }
 
@@ -1619,6 +1619,8 @@ textarea {
         .cool-people .cool-people-content p {
           font-size: 26px;
           font-size: 1.625rem; } }
+    .cool-people .cool-people-content a {
+      color: #FCCDD3; }
     .cool-people .cool-people-content img {
       max-width: none;
       width: 100%; }
@@ -1872,7 +1874,8 @@ main {
    Footer
    ================================================================ */
 footer {
-  margin: -150px 0 0; }
+  margin: -150px 0 0;
+  position: relative; }
   @media (min-width: 48em) {
     footer {
       margin: -170px 0 0;

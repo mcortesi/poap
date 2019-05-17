@@ -165,7 +165,7 @@ h4 {
 
 h5 {
     @include x-rem(font-size, 30px);
-    color:$color-invert;
+    color: $color-base;
     font-weight: $fontWeight-normal; 
 
     @media (min-width: $bp-mw) {
@@ -209,7 +209,7 @@ ol {
 
     li {
         @include x-rem(font-size, 16px);
-        color: $color-invert;
+        color: $color-base;
         font-family: $font-family;
         margin: 0 0 10px;
     }
