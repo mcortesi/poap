@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "clean": "rm -rf ./dist",
-    "postinstall": "yarn build-ts",
+    "postinstall": "yarn build",
     "build": "tsc",
     "start": "node ./dist/index.js",
     "start:dev": "ts-node-dev ./src/index.ts | pino-pretty",
