@@ -14,21 +14,24 @@ const NavigationMenu = withRouter(({ history }) => {
   const closeMenu = useCallback(() => setIsOpen(false), []);
 
   return (
-    <Menu isOpen={isOpen} onStateChange={state => setIsOpen(state.isOpen)} right>
+    <Menu isOpen={isOpen} onStateChange={state => setIsOpen(state.isOpen)} right disableAutoFocus>
+      <h2>Issue Badges:</h2>
       <Link to="/admin/issue-for-event" onClick={closeMenu}>
-        Issue Tokens For Event
+        Many Users
       </Link>
       <Link to="/admin/issue-for-user" onClick={closeMenu}>
-        Issue Tokens For User
+        Many Events
       </Link>
+
+      <h2>Other Tasks</h2>
       <Link to="/admin/events" onClick={closeMenu}>
         Manage Events
       </Link>
-      <Link to="/admin/minters" onClick={closeMenu}>
+      {/* <Link to="/admin/minters" onClick={closeMenu}>
         Manage Minters
-      </Link>
-      <br />
+      </Link> */}
       <a
+        className="bm-item"
         href=""
         onClick={() => {
           auth.logout();
