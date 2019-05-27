@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from 'react';
-import { loginMetamask, tryGetAccount, hasMetamask, isMetamaskLogged } from '../poap-eth';
+import { tryGetAccount, hasMetamask, isMetamaskLogged } from '../poap-eth';
 import { useToggleState, useAsync } from '../react-helpers';
 import { resolveENS } from '../api';
 import { getAddress } from 'ethers/utils';
 import classNames from 'classnames';
-import { Loading } from '../components/Loading';
+// import { Loading } from '../components/Loading';
 
 enum AccountState {
   Checking,
@@ -147,7 +147,7 @@ const AddressInput: React.FC<AddressInputProps> = ({ onAddress }) => {
         type="text"
         id="address"
         required
-        placeholder="evanvanness.eth"
+        placeholder="matoken.eth"
         onChange={handleChange}
         className={classNames(ensError && 'error')}
       />

@@ -1,5 +1,4 @@
 import { authClient } from './auth';
-import { async } from 'q';
 
 export type Address = string;
 export interface TokenInfo {
