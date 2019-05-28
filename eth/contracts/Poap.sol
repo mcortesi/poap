@@ -29,11 +29,12 @@ contract Poap is Initializable, ERC721, ERC721Enumerable, PoapRoles, PoapPausabl
     // Base token URI
     string private _baseURI;
 
+    // Last Used id (used to generate new ids)
+    uint256 private lastId;
+
     // EventId for each token
     mapping(uint256 => uint256) private _tokenEvent;
 
-    // Last Used id (used to generate new ids)
-    uint256 private lastId;
 
     bytes4 private constant _INTERFACE_ID_ERC721_METADATA = 0x5b5e139f;
     
