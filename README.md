@@ -132,6 +132,11 @@ If you change contract logic and want to update it:
     npx zos push
     npx zos update Poap
 
+### Deploy Website (firebase)
+
+    cd website
+    yarn deploy # Will build & run firebase deploy
+
 ### Deploy Client (firebase)
 
     cd client
