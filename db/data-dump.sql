@@ -363,5 +363,18 @@ VALUES
     'Berlin',
     'Germany',
     'https://ethberlin.com/'
+  ),
+  (
+    28,
+    'ethny-19',
+    2019,
+    '2019-05-17',
+    '2019-05-19',
+    'ETHNewYork',
+    'Part of the EthGlobal Community',
+    'https://scan.poap.xyz/events/images/ethnyc2018_512.png',
+    'New York',
+    'United States',
+    'https://ethnewyork.com/'
   );
-alter sequence events_id_seq restart with 28;
+alter sequence events_id_seq restart with 29;
