@@ -1,12 +1,19 @@
 import { Contract, getDefaultProvider } from 'ethers';
+import { getAddress } from 'ethers/utils';
 import * as csv from 'fast-csv';
+import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
-import { concurrentMap } from './utils';
-import { writeFileSync, readFileSync } from 'fs';
-import { Address } from './types';
-import { getContract, estimateMintingGas } from './poap-helper';
 import getEnv from './envs';
 import { Poap } from './poap-eth/Poap';
+import { estimateMintingGas, getContract } from './poap-helper';
+import { Address } from './types';
+import { concurrentMap } from './utils';
+
+/******************************************************
+ * PARAMETERS
+ ******************************************************/
+const GAS_PRICE = 5e9; // 1e9 == 1 gwei
+const LAST_TXHASH = '0x4712b67555ad0c1fc90676e03bfb4a37b3815315db35e4759d93ef524b797162';
 
 /**
  * Get Old Contract iface.
@@ -91,29 +98,74 @@ export async function generateTokenJson(txcsvPath: string, tokenJsonPath: string
   writeTokensJson(tokenJsonPath, tokens);
 }
 
-export async function writeContract(tokenJsonPath: string) {
+export async function writeContract(
+  tokenJsonPath: string,
+  last: { eventId: string; address: string }
+) {
   const eventTokens = groupByEvent(readTokensJson(tokenJsonPath));
   const BATCH_SIZE = 10;
   const eventIds = Array.from(eventTokens.keys());
 
   const contract = getContract().connect(getEnv().poapAdmin) as Poap;
 
-  for (let i = 0; i < eventIds.length; i++) {
-    const tokens = eventTokens.get(eventIds[i]) as TokenStruct[];
-    for (let j = 0; j < tokens.length; ) {
+  console.log('Number of Events:', eventIds.length);
+
+  let i = eventIds.indexOf(last.eventId);
+  // let nonce = 881;
+  abortOn(i === -1, `Didn\'t find eventId: ${last.eventId}). Aborting`);
+  for (; i < eventIds.length; i++) {
+    const eventId = eventIds[i];
+    const tokens = eventTokens.get(eventId) as TokenStruct[];
+
+    let j = 0;
+    if (eventId === last.eventId) {
+      const isLastAddress = (t: TokenStruct) => getAddress(t.owner) === last.address;
+      j = tokens.findIndex(isLastAddress);
+      abortOn(
+        j === -1,
+        `Didn\'t find token with owner ${last.address} (eventId: ${last.eventId}). Aborting`
+      );
+      j = j + 1; // move to the next one
+
+      abortOn(
+        tokens.slice(j).some(isLastAddress), //there is another with the same owner
+        `More than one token with event: ${last.address} and owner: ${last.address}`
+      );
+      console.log(`Resuming at eventIdx=${i}, addrIdx=${j}`);
+    }
+
+    while (j < tokens.length) {
       console.log(`CurrentAction: eventIdx=${i}, addrIdx=${j}`);
       const endJ = Math.min(j + BATCH_SIZE, tokens.length);
       const addresses = tokens.slice(j, endJ).map(t => t.owner);
 
-      // console.log(`mintTokenBatch(${eventIds[i]}, ${addresses})`);
-      const tx = await contract.functions.mintEventToManyUsers(eventIds[i], addresses, {
+      // console.log(`mintTokenBatch(${eventId}, ${addresses})`);
+      const tx = await contract.functions.mintEventToManyUsers(eventId, addresses, {
+        // nonce: nonce++,
         gasLimit: estimateMintingGas(BATCH_SIZE),
+        gasPrice: GAS_PRICE,
       });
       console.log(`Waiting for tx: ${tx.hash}`);
       await tx.wait();
       j = endJ;
     }
   }
+}
+
+export async function getLastTransfer(
+  txHash: string
+): Promise<{ eventId: string; address: string }> {
+  const contract = getContract();
+  const provider = contract.provider;
+  const tx = await provider.getTransaction(txHash);
+  const parsedTx = contract.interface.parseTransaction(tx);
+
+  const [eventId, addresses] = parsedTx.args;
+
+  return {
+    eventId: eventId.toString(),
+    address: getAddress(addresses[addresses.length - 1].toString()),
+  };
 }
 
 function printHelpAndExit() {
@@ -132,11 +184,14 @@ async function main() {
   const command = process.argv[2];
   if (command == 'tokenjson') {
     await generateTokenJson(
-      join(DumpsPath, 'etherscan-export-19-05-13.csv'),
+      join(DumpsPath, 'etherscan-export-19-05-27.csv'),
       join(DumpsPath, 'tokens.json')
     );
   } else if (command == 'writecontract') {
-    await writeContract(join(DumpsPath, 'tokens.json'));
+    console.log(`Last tx was: ${LAST_TXHASH}`);
+    const last = await getLastTransfer(LAST_TXHASH);
+    console.log(`Last EventId: ${last.eventId} TokenOwner: ${last.address}`);
+    await writeContract(join(DumpsPath, 'tokens.json'), last);
   } else {
     printHelpAndExit();
   }
@@ -145,3 +200,10 @@ async function main() {
 main().catch(err => {
   console.error('Failed', err);
 });
+
+function abortOn(condition: boolean, msg: string) {
+  if (condition) {
+    console.error(msg);
+    process.exit(1);
+  }
+}
