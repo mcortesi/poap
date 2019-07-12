@@ -119,7 +119,7 @@ contract Poap is Initializable, ERC721, ERC721Enumerable, PoapRoles, PoapPausabl
         for (uint256 i = 0; i < to.length; ++i) {
             _mintToken(eventId, lastId + 1 + i, to[i]);
         }        
-        lastId += 1 + to.length;
+        lastId += to.length;
         return true;
     }
 
@@ -135,7 +135,7 @@ contract Poap is Initializable, ERC721, ERC721Enumerable, PoapRoles, PoapPausabl
         for (uint256 i = 0; i < eventIds.length; ++i) {
             _mintToken(eventIds[i], lastId + 1 + i, to);
         }        
-        lastId += 1 + eventIds.length;
+        lastId += eventIds.length;
         return true;
     }
 
