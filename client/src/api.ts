@@ -121,7 +121,6 @@ export async function requestProof(
     },
   });
 }
-
 export async function mintEventToManyUsers(eventId: number, addresses: string[]): Promise<any> {
   return secureFetchNoResponse(`${API_BASE}/actions/mintEventToManyUsers`, {
     method: 'POST',
@@ -146,7 +145,17 @@ export async function mintUserToManyEvents(eventIds: number[], address: string):
     },
   });
 }
-
+// Nick T.
+// Updates the Gas Price. Applied to all future Contracts and Transactions.
+export async function setGasPrice(gasPrice: number): Promise<any> {
+  return secureFetchNoResponse(`${API_BASE}/actions/setGasPrice`, {
+    method: 'PUT',
+    body: JSON.stringify(gasPrice),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
 export async function updateEvent(event: PoapEvent) {
   return secureFetchNoResponse(`${API_BASE}/events/${event.fancy_id}`, {
     method: 'PUT',
