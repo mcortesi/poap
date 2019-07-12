@@ -1,6 +1,7 @@
 const { TestHelper } = require('zos');
 const { Contracts, ZWeb3 } = require('zos-lib');
 const expect = require('chai').expect;
+const assert = require('chai').assert;
 
 ZWeb3.initialize(web3.currentProvider);
 
@@ -131,15 +132,99 @@ contract('Poap', function() {
     });
   });
 
-  describe.skip('mintToken', function() {
-    it('should allow admin to mint tokens', async function() {
-      console.log(await proxy.methods.balanceOf(accounts[1]).call());
-      await proxy.methods.mintToken(55, 1, accounts[1]).send({ from: admin });
+  describe('Token Minting', function() {
 
-      console.log(await proxy.methods.balanceOf(accounts[1]).call());
-      // expect((await proxy.methods.balanceOf(accounts[1]).call()).toNumber()).to.eq(1);
-      // expect(await proxy.methods.ownerOf(10).call()).to.eq(accounts[1]);
+    describe('mintToken', function() {
+
+      it('should NOT allow admin to mint token for address 0', async function() {
+        try{
+          const emptyAddress = '0x0000000000000000000000000000000000000000';
+          await proxy.methods.mintToken(1, emptyAddress).send({from: owner, gas: 1000000});
+        } catch (err) {
+          return;
+        }
+        assert(false, 'token was minted for address 0');
+      });
+
+      it('should allow admin to mint token for a single user', async function() {
+        let tokenOwner = accounts[1];
+        let initialBalance = parseInt(await proxy.methods.balanceOf(tokenOwner).call());
+        await proxy.methods.mintToken(1, tokenOwner).send({from: owner, gas: 1000000});
+        let finalBalance = parseInt(await proxy.methods.balanceOf(tokenOwner).call());
+        expect(finalBalance - initialBalance).to.eq(1);
+      });
+
     });
+
+    describe('mintUserToManyEvents', function() {
+
+      it('should allow admin to mint multiple tokens for a single user', async function() {
+        let tokenOwner = accounts[1];
+        let eventIds = [100, 101, 102];
+        let initialBalance = parseInt(await proxy.methods.balanceOf(tokenOwner).call());
+        await proxy.methods.mintUserToManyEvents(eventIds, tokenOwner).send({from: owner, gas: 1000000});
+        let finalBalance = parseInt(await proxy.methods.balanceOf(tokenOwner).call());
+        expect(finalBalance - initialBalance).to.eq(eventIds.length);
+      });
+
+    });
+
+    describe('mintEventToManyUsers', function() {
+
+      it('should allow admin to mint same event token for multiple users', async function() {
+        let tokenOwners = [accounts[1], accounts[2], accounts[3]];
+        let eventId = 1;
+
+        let initialBalances = await Promise.all(tokenOwners.map(async account => {
+          return await proxy.methods.balanceOf(account).call()
+        }));
+
+        await proxy.methods.mintEventToManyUsers(eventId, tokenOwners).send({from: owner, gas: 1000000});
+
+        let finalBalances = await Promise.all(tokenOwners.map(async account => {
+          return await proxy.methods.balanceOf(account).call()
+        }));
+
+        tokenOwners.forEach((account, i) => {
+          expect(parseInt(finalBalances[i]) - parseInt(initialBalances[i])).to.eq(1);
+        });
+
+      });
+
+    });
+
+    describe('Integration tests', function() {
+      it('should mint valid tokens using all minting methods consecutively', async function() {
+        let tokenOwners = [accounts[1], accounts[2]];
+        let eventIds = [100, 101, 102, 103, 104, 105];
+        let tokensMinted = [];
+
+        await proxy.methods.mintToken(eventIds[0], tokenOwners[0]).send({from: owner, gas: 1000000});
+        tokensMinted.push(eventIds[0]);
+
+        let eventGroup = [eventIds[1], eventIds[2]];
+        await proxy.methods.mintUserToManyEvents(eventGroup, tokenOwners[0]).send({from: owner, gas: 1000000});
+        eventGroup.forEach(event => tokensMinted.push(event));
+
+        await proxy.methods.mintToken(eventIds[3], tokenOwners[0]).send({from: owner, gas: 1000000});
+        tokensMinted.push(eventIds[3]);
+
+        await proxy.methods.mintEventToManyUsers(eventIds[4], tokenOwners).send({from: owner, gas: 1000000});
+        tokenOwners.forEach(() => tokensMinted.push(eventIds[4]));
+
+        await proxy.methods.mintToken(eventIds[5], tokenOwners[0]).send({from: owner, gas: 1000000});
+        tokensMinted.push(eventIds[5]);
+
+        for (let i = 0; i < tokensMinted.length; i++) {
+          let tokenEvent = await proxy.methods.tokenEvent(i+1).call();
+          expect(tokenEvent).to.eq(tokensMinted[i].toString());
+        }
+
+        expect(await proxy.methods.tokenEvent(tokensMinted.length+1).call()).to.eq('0');
+
+      });
+    });
+
   });
 
   // mintToken:
