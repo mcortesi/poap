@@ -123,18 +123,18 @@ export default async function routes(fastify: FastifyInstance) {
 
   // Nick T.
   fastify.put(
-    'actions/setGasPrice',
+    '/actions/setGasPrice',
     {
       preValidation: [fastify.authenticate],
-      schema: {
-        params: {
-          gasPrice: 'gasPrice',
-        },
-      },
+      // schema: {
+      //   params: {
+      //     gasPrice: 'number',
+      //   },
+      // },
     },
     async (req, res) => {
       // update DB with Gas Price
-      const gasPrice = req.params.gasPrice;
+      // const gasPrice = req.params.gasPrice;
       // updateGasPrice(gasPrice); // NEED TO LOAD THIS IN.
       // 
       return;

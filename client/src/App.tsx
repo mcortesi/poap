@@ -13,7 +13,8 @@ const App: React.FC<AppProps> = ({ auth }) => (
     <Router>
       <Switch>
         <Route exact path="/callback" component={Callback} />
-        <PrivateRoute path="/admin" component={BackOffice} />
+        {/* <PrivateRoute path="/admin" component={BackOffice} /> */}
+        <Route path="/admin" component={BackOffice} />
         <Route path="/claim/:event" component={ClaimPage} />
         <Route path="/" component={ScanPage} />
       </Switch>

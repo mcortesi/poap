@@ -60,4 +60,13 @@ export async function createEvent(event: Omit<PoapEvent, 'id'>): Promise<PoapEve
   };
 }
 
+// Nick T.
+async function updateGasPrice(gasPrice: number) {
+  const data = await db.one(
+    'INSERT INTO gas(${this:name}) VALUES(${this:csv}) RETURNING id', gasPrice
+  );
+  return Object.assign({}, event, { id: data.id });
+}
+exports.updateGasPrice = updateGasPrice;
+
 // export async function insertEvent
