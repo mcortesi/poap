@@ -5,6 +5,7 @@ import { AuthContext } from '../auth';
 import PoapLogo from '../images/POAP.svg';
 import { IssueForEventPage, IssueForUserPage } from './IssuePage';
 import { EventsPage } from './EventsPage';
+import { GasPage } from './GasPage';
 
 export const MintersPage = () => <div> This is a MintersPage </div>;
 
@@ -18,6 +19,9 @@ const NavigationMenu = withRouter(({ history }) => {
       <h2>Issue Badges:</h2>
       <Link to="/admin/issue-for-event" onClick={closeMenu}>
         Many Users
+      </Link>
+      <Link to="/admin/event-gas-setting" onClick={closeMenu}>
+        Gas Setting
       </Link>
       <Link to="/admin/issue-for-user" onClick={closeMenu}>
         Many Events
@@ -65,6 +69,7 @@ export const BackOffice: React.FC = () => (
       <div className="container">
         <div className="bk-container">
           <Route path="/admin/issue-for-event" component={IssueForEventPage} />
+          <Route path="/admin/event-gas-setting" component={GasPage} />
           <Route path="/admin/issue-for-user" component={IssueForUserPage} />
           <Route path="/admin/events" component={EventsPage} />
           <Route path="/admin/minters" component={MintersPage} />
