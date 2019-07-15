@@ -42,6 +42,7 @@ export async function mintToken(eventId: number, toAddr: Address) {
   // Set a new Value, which returns the transaction
   const tx = await contract.functions.mintToken(eventId, toAddr, {
     gasLimit: estimateMintingGas(1),
+    // gasPrice: GAS_PRICE, //// TODO send Gas Price - utils.parseUnits('9.0', 'gwei')
   });
 
   console.log(tx.hash);
@@ -56,6 +57,7 @@ export async function mintEventToManyUsers(eventId: number, toAddr: Address[]) {
   // Set a new Value, which returns the transaction
   const tx = await contract.functions.mintEventToManyUsers(eventId, toAddr, {
     gasLimit: estimateMintingGas(toAddr.length),
+    // gasPrice: GAS_PRICE, //// TODO send Gas Price - utils.parseUnits('9.0', 'gwei')
   });
 
   console.log(`mintTokenBatch: transaction: ${tx.hash}`);
@@ -71,6 +73,7 @@ export async function mintUserToManyEvents(eventIds: number[], toAddr: Address) 
   // Set a new Value, which returns the transaction
   const tx = await contract.functions.mintUserToManyEvents(eventIds, toAddr, {
     gasLimit: estimateMintingGas(eventIds.length),
+    // gasPrice: GAS_PRICE, //// TODO send Gas Price - utils.parseUnits('9.0', 'gwei')
   });
 
   console.log(`mintTokenBatch: transaction: ${tx.hash}`);
@@ -151,3 +154,4 @@ export async function verifyClaim(claim: Claim): Promise<boolean> {
 
   return true;
 }
+

@@ -1,11 +1,9 @@
 import { ErrorMessage, Field, Form, Formik, FormikActions, FieldProps } from 'formik';
 import React from 'react';
 import * as yup from 'yup';
-import { setGasPrice } from '../api';
+import { setGasPrice, getGasPrice } from '../api';
 import classNames from 'classnames';
 import { SubmitButton } from '../components/SubmitButton';
-
-// Nick T.
 
 interface GasForEventPageState {
   initialValues: GasForEventFormValues;
@@ -31,7 +29,15 @@ export class GasPage extends React.Component {
     }
   };
 
-  async componentDidMount() { }
+  async componentDidMount(): Promise<void> {
+    // in progress.
+    // const gas = await getGasPrice();
+    // if (gas && gas.price) {
+    //   this.setState({ initialValues: gas.price }, () => {
+    //     debugger;
+    //   });
+    // }
+  }
 
   onSubmit = async (
     values: GasForEventFormValues,
@@ -67,6 +73,7 @@ export class GasPage extends React.Component {
               <div className="bk-form-row">
                 <label htmlFor="gasPrice">Gas Price Setting</label>
                 <Field
+                  value={this.state.initialValues}
                   name="gasPrice"
                   render={({ field, form }: FieldProps) => (
                     <input
