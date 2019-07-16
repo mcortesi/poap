@@ -169,7 +169,8 @@ export async function setGasPrice(gasPrice: number): Promise<any> {
   });
 }
 export async function getGasPrice(): Promise<any> {
-  return fetchJson(`${API_BASE}/actions/getGasPrice`);
+  const resp = await fetchJson(`${API_BASE}/actions/getGasPrice`);
+  return resp;
 }
 
 export async function updateEvent(event: PoapEvent) {

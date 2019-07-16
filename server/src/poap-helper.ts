@@ -1,9 +1,9 @@
-import { Contract } from 'ethers';
+import { Contract, utils } from 'ethers';
 import { verifyMessage } from 'ethers/utils';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import pino from 'pino';
-import { getEvent, getEvents } from './db';
+import { getEvent, getEvents, getGasPrice } from './db';
 import getEnv from './envs';
 import { Poap } from './poap-eth/Poap';
 import { Address, Claim, TokenInfo } from './types';
@@ -38,11 +38,12 @@ export function estimateMintingGas(n: number) {
 
 export async function mintToken(eventId: number, toAddr: Address) {
   const contract = getContract();
-
+  // Get Gas Price
+  const gas = await getGasPrice();
   // Set a new Value, which returns the transaction
   const tx = await contract.functions.mintToken(eventId, toAddr, {
     gasLimit: estimateMintingGas(1),
-    // gasPrice: GAS_PRICE, //// TODO send Gas Price - utils.parseUnits('9.0', 'gwei')
+    gasPrice: utils.parseUnits(gas.price, 'gwei')
   });
 
   console.log(tx.hash);
@@ -53,11 +54,12 @@ export async function mintToken(eventId: number, toAddr: Address) {
 
 export async function mintEventToManyUsers(eventId: number, toAddr: Address[]) {
   const contract = getContract();
-
+  // Get Gas Price
+  const gas = await getGasPrice();
   // Set a new Value, which returns the transaction
   const tx = await contract.functions.mintEventToManyUsers(eventId, toAddr, {
     gasLimit: estimateMintingGas(toAddr.length),
-    // gasPrice: GAS_PRICE, //// TODO send Gas Price - utils.parseUnits('9.0', 'gwei')
+    gasPrice: utils.parseUnits(gas.price, 'gwei')
   });
 
   console.log(`mintTokenBatch: transaction: ${tx.hash}`);
@@ -69,11 +71,12 @@ export async function mintEventToManyUsers(eventId: number, toAddr: Address[]) {
 
 export async function mintUserToManyEvents(eventIds: number[], toAddr: Address) {
   const contract = getContract();
-
+  // Get Gas Price
+  const gas = await getGasPrice();
   // Set a new Value, which returns the transaction
   const tx = await contract.functions.mintUserToManyEvents(eventIds, toAddr, {
     gasLimit: estimateMintingGas(eventIds.length),
-    // gasPrice: GAS_PRICE, //// TODO send Gas Price - utils.parseUnits('9.0', 'gwei')
+    gasPrice: utils.parseUnits(gas.price, 'gwei')
   });
 
   console.log(`mintTokenBatch: transaction: ${tx.hash}`);

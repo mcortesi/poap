@@ -23,21 +23,27 @@ const GasSettingFormValueSchema = yup.object().shape({
 
 export class GasPage extends React.Component {
 
+  async componentDidMount(): Promise<void> {
+    try {
+      const gas = await getGasPrice();
+      if (gas && gas.price) {
+        this.setState({
+          initialValues: {
+            gasPrice: gas.price,
+            loaded: true
+          }
+        });
+      }
+    } catch (err) {
+      console.log(`login error: ${err}`);
+    }
+  }
+
   state: GasForEventPageState = {
     initialValues: {
       gasPrice: 0
     }
   };
-
-  async componentDidMount(): Promise<void> {
-    // in progress.
-    // const gas = await getGasPrice();
-    // if (gas && gas.price) {
-    //   this.setState({ initialValues: gas.price }, () => {
-    //     debugger;
-    //   });
-    // }
-  }
 
   onSubmit = async (
     values: GasForEventFormValues,
@@ -64,6 +70,7 @@ export class GasPage extends React.Component {
   render() {
     return (
       <Formik
+        enableReinitialize
         initialValues={this.state.initialValues}
         onSubmit={this.onSubmit}
         validationSchema={GasSettingFormValueSchema}
@@ -73,7 +80,7 @@ export class GasPage extends React.Component {
               <div className="bk-form-row">
                 <label htmlFor="gasPrice">Gas Price Setting</label>
                 <Field
-                  value={this.state.initialValues}
+                  value={this.state.initialValues.gasPrice}
                   name="gasPrice"
                   render={({ field, form }: FieldProps) => (
                     <input

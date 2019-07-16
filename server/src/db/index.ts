@@ -66,7 +66,7 @@ export async function updateGasPrice(gasPrice: number): Promise<null> {
   return data
 }
 
-export async function getGasPrice(): Promise<object> {
+export async function getGasPrice(): Promise<any> {
   const res = await db.one('SELECT * FROM gas ORDER BY created_date DESC LIMIT 1');
   return res;
 }
