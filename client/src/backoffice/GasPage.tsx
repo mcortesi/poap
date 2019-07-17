@@ -1,11 +1,9 @@
 import { ErrorMessage, Field, Form, Formik, FormikActions, FieldProps } from 'formik';
 import React from 'react';
 import * as yup from 'yup';
-import { setGasPrice } from '../api';
+import { setGasPrice, getGasPrice } from '../api';
 import classNames from 'classnames';
 import { SubmitButton } from '../components/SubmitButton';
-
-// Nick T.
 
 interface GasForEventPageState {
   initialValues: GasForEventFormValues;
@@ -25,13 +23,27 @@ const GasSettingFormValueSchema = yup.object().shape({
 
 export class GasPage extends React.Component {
 
+  async componentDidMount(): Promise<void> {
+    try {
+      const gas = await getGasPrice();
+      if (gas && gas.price) {
+        this.setState({
+          initialValues: {
+            gasPrice: gas.price,
+            loaded: true
+          }
+        });
+      }
+    } catch (err) {
+      console.log(`login error: ${err}`);
+    }
+  }
+
   state: GasForEventPageState = {
     initialValues: {
       gasPrice: 0
     }
   };
-
-  async componentDidMount() { }
 
   onSubmit = async (
     values: GasForEventFormValues,
@@ -58,6 +70,7 @@ export class GasPage extends React.Component {
   render() {
     return (
       <Formik
+        enableReinitialize
         initialValues={this.state.initialValues}
         onSubmit={this.onSubmit}
         validationSchema={GasSettingFormValueSchema}
@@ -67,6 +80,7 @@ export class GasPage extends React.Component {
               <div className="bk-form-row">
                 <label htmlFor="gasPrice">Gas Price Setting</label>
                 <Field
+                  value={this.state.initialValues.gasPrice}
                   name="gasPrice"
                   render={({ field, form }: FieldProps) => (
                     <input

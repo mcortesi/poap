@@ -143,7 +143,7 @@ export async function writeContract(
       const tx = await contract.functions.mintEventToManyUsers(eventId, addresses, {
         // nonce: nonce++,
         gasLimit: estimateMintingGas(BATCH_SIZE),
-        gasPrice: GAS_PRICE,
+        gasPrice: GAS_PRICE, ///// TODO Add db Gas Price here.
       });
       console.log(`Waiting for tx: ${tx.hash}`);
       await tx.wait();
