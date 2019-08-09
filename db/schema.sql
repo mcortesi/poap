@@ -16,6 +16,6 @@ CREATE TABLE events (
 );
 CREATE TABLE gas (
   "id" SERIAL PRIMARY KEY,
-  "price" float,
+  "price" BIGINT,
   "created_date" timestamp with time zone not null default now()
 );
