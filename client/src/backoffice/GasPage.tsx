@@ -18,7 +18,8 @@ const GasSettingFormValueSchema = yup.object().shape({
     .number()
     .typeError('Must be a number')
     .required('Field cannot be empty')
-    .min(0)
+    .min(1)
+    .max(200)
 })
 
 export class GasPage extends React.Component {
