@@ -47,6 +47,7 @@ async function fetchJson<A>(input: RequestInfo, init?: RequestInit): Promise<A> 
   }
 }
 
+
 async function secureFetchNoResponse(input: RequestInfo, init?: RequestInit): Promise<void> {
   const bearer = 'Bearer ' + (await authClient.getAPIToken());
   const res = await fetch(input, {
@@ -121,7 +122,6 @@ export async function requestProof(
     },
   });
 }
-
 export async function mintEventToManyUsers(eventId: number, addresses: string[]): Promise<any> {
   return secureFetchNoResponse(`${API_BASE}/actions/mintEventToManyUsers`, {
     method: 'POST',
@@ -145,6 +145,20 @@ export async function mintUserToManyEvents(eventIds: number[], address: string):
       'Content-Type': 'application/json',
     },
   });
+}
+// Updates the Gas Price. Applied to all future Contracts and Transactions.
+export async function setGasPrice(gasPrice: number): Promise<any> {
+  return secureFetchNoResponse(`${API_BASE}/actions/setGasPrice`, {
+    method: 'POST',
+    body: JSON.stringify({ gasPrice }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+export async function getGasPrice(): Promise<any> {
+  const resp = await fetchJson(`${API_BASE}/actions/getGasPrice`);
+  return resp;
 }
 
 export async function updateEvent(event: PoapEvent) {

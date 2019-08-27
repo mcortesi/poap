@@ -1,14 +1,14 @@
 import { getDefaultProvider } from 'ethers';
 import { FastifyInstance } from 'fastify';
 import createError from 'http-errors';
-import { getEvent, getEventByFancyId, getEvents, updateEvent, createEvent } from './db';
+import { getEvent, getEventByFancyId, getEvents, updateEvent, createEvent, updateGasPrice, getGasPrice } from './db';
 import {
   getAllTokens,
   getTokenInfo,
   mintToken,
   mintEventToManyUsers,
   verifyClaim,
-  mintUserToManyEvents,
+  mintUserToManyEvents
 } from './poap-helper';
 import { Claim, PoapEvent } from './types';
 
@@ -118,6 +118,25 @@ export default async function routes(fastify: FastifyInstance) {
       const address = req.params.address;
       const tokens = await getAllTokens(address);
       return tokens;
+    }
+  );
+
+  // preValidation: [fastify.authenticate],
+  fastify.get(
+    '/actions/getGasPrice', {},
+    async (req, res) => {
+      const gasPrice = await getGasPrice();
+      return gasPrice;
+    }
+  );
+
+  // preValidation: [fastify.authenticate],
+  fastify.post(
+    '/actions/setGasPrice', {},
+    async (req, res) => {
+      if (!req.body.gasPrice) return;
+      const gasPrice = await updateGasPrice(req.body.gasPrice);
+      return gasPrice;
     }
   );
 

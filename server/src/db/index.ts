@@ -19,7 +19,6 @@ function replaceDates(event: PoapEvent): PoapEvent {
 
 export async function getEvents(): Promise<PoapEvent[]> {
   const res = await db.manyOrNone<PoapEvent>('SELECT * FROM events ORDER BY start_date DESC');
-
   return res.map(replaceDates);
 }
 
@@ -60,4 +59,23 @@ export async function createEvent(event: Omit<PoapEvent, 'id'>): Promise<PoapEve
   };
 }
 
-// export async function insertEvent
+export async function updateGasPrice(gasPrice: number): Promise<null> {
+  const data = await db.one(
+    `INSERT INTO gas (id, price, created_date) VALUES(DEFAULT, ${gasPrice}, to_timestamp(${Date.now() / 1000})) RETURNING *`
+  );
+  return data
+}
+
+export async function getGasPrice(): Promise<any> {
+  const res = await db.one('SELECT * FROM gas ORDER BY created_date DESC LIMIT 1');
+  return res;
+}
+
+// TODO ensure table exists.
+// const queryText =
+//    `CREATE TABLE IF NOT EXISTS
+//      gas(
+//        id UUID PRIMARY KEY,
+//        price FLOAT NOT NULL,
+//        created_date TIMESTAMP,
+//      )`;

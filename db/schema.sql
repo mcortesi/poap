@@ -14,3 +14,8 @@ CREATE TABLE events (
   "end_date" date not null,
   "created_date" timestamp with time zone not null default now()
 );
+CREATE TABLE gas (
+  "id" SERIAL PRIMARY KEY,
+  "price" BIGINT,
+  "created_date" timestamp with time zone not null default now()
+);
