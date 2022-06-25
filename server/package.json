@@ -36,7 +36,7 @@
     "fastify-jwt": "^0.10.0",
     "fastify-plugin": "^1.5.0",
     "jwks-rsa": "^1.4.0",
-    "node-fetch": "^2.4.1",
+    "node-fetch": "^2.6.7",
     "pg": "^7.10.0",
     "pg-promise": "^8.7.1",
     "pino": "^5.12.3",
